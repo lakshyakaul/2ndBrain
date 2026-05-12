@@ -14,54 +14,54 @@ export const CLIENTS = [
 
 export const USERS = [
     {
-        name: 'Alice',
+        name: 'Lebron',
         message:
-            'Cypress has been a game-changer for our team. With its reliable end-to-end testing, we catch bugs early, leading to faster development cycles and improved collaboration.',
+            'Oh yeah, this is the one.',
     },
     {
-        name: 'Bob',
+        name: 'Trump',
         message:
-            "I used to spend hours debugging frontend issues, but Cypress simplified everything. Now, I'm more productive, and my colleagues can trust our code thanks to Cypress.",
+            "This app is so so GOOD, the developer is a REALLY amazing guy I must say!",
     },
     {
-        name: 'Charlie',
+        name: 'Big Yahu',
         message:
-            "Cypress has transformed the way we work. Our QA and development teams are on the same page, and our productivity has skyrocketed. It's a must-have tool.",
+            "Our greatest asset.",
     },
     {
-        name: 'David',
+        name: 'Gurt',
         message:
-            'I was skeptical at first, but Cypress exceeded my expectations. Our project timelines have improved, and collaboration between teams is seamless.',
+            'Yo',
     },
     {
-        name: 'Ella',
+        name: 'Squidward',
         message:
-            "Cypress made writing and running tests a breeze. Our team's productivity has never been higher, and we're delivering more reliable software.",
+            "Spongeboy me bob",
     },
     {
-        name: 'Frank',
+        name: 'Dexter',
         message:
-            "Thanks to Cypress, we've eliminated testing bottlenecks. Our developers and testers collaborate effortlessly, resulting in quicker releases.",
+            "Tonight's the night... and it's gonna happen again...",
     },
     {
-        name: 'Grace',
+        name: 'Nolan',
         message:
-            'Cypress has improved our development process significantly. We now have more time for innovation, and our products are of higher quality.',
+            'Absolute cinema.',
     },
     {
         name: 'Hank',
         message:
-            "Cypress's user-friendly interface made it easy for our non-technical team members to contribute to testing. Our workflow is much more efficient now.",
+            "I don't know man. This app has been acting sus lately. Almost like we have an imposter among us.",
     },
     {
-        name: 'Ivy',
+        name: 'Vineet',
         message:
-            "Our team's collaboration improved immensely with Cypress. We catch issues early, leading to less friction and quicker feature deployments.",
+            "Great work twin, you're number 1.",
     },
     {
-        name: 'Jack',
+        name: 'Negi',
         message:
-            "Cypress's robust testing capabilities have elevated our development standards. We work more harmoniously, and our releases are more reliable.",
+            "Son",
     },
     {
         name: 'Katherine',
@@ -114,7 +114,7 @@ export const PRICING_CARDS = [
     {
         planType: 'Free Plan',
         price: '0',
-        description: 'Limited block trials  for teams',
+        description: 'Limited block trials for teams',
         highlightFeature: '',
         freatures: [
             'Unlimited blocks for teams',
@@ -125,8 +125,8 @@ export const PRICING_CARDS = [
     },
     {
         planType: 'Pro Plan',
-        price: '12.99',
-        description: 'Billed annually. $17 billed monthly',
+        price: '1188',
+        description: 'Billed annually. ₹99 billed monthly',
         highlightFeature: 'Everything in free +',
         freatures: [
             'Unlimited blocks for teams',
