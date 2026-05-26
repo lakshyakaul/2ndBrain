@@ -8,7 +8,7 @@ import { FormSchema } from "@/lib/types";
 import { Field, FieldError, FieldGroup } from "@/components/ui/field";
 import Link from "next/link";
 import Image from "next/image";
-import Logo from "../../../../public/cypresslogo.svg";
+import Logo from "../../../../public/space.svg";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Loader from "@/components/global/loader";
@@ -34,6 +34,7 @@ const LoginPage = () => {
 		if (error) {
 			form.reset();
 			setSubmitError(error.message);
+            return;
 		}
 		router.replace("/dashboard");
 	};
@@ -54,7 +55,7 @@ const LoginPage = () => {
           justify-left
           items-center"
 			>
-				<Image src={Logo} alt="cypress Logo" width={50} height={50} />
+				<Image src={Logo} alt="App Logo" width={50} height={50} />
 				<span
 					className="font-semibold
                             dark:text-white 

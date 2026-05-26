@@ -37,7 +37,10 @@ export async function actionLoginUser({
     email,
     password,
   });
-  return response;
+  if (response.error) {
+    return { error: { message: response.error.message } };
+  }
+  return JSON.parse(JSON.stringify(response));
 }
 
 export async function actionSignUpUser({
@@ -65,12 +68,7 @@ export async function actionSignUpUser({
       },
     }
   );
-  const { data } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('email', email);
 
-  if (data?.length) return { error: { message: 'User already exists', data } };
   const response = await supabase.auth.signUp({
     email,
     password,
@@ -78,5 +76,25 @@ export async function actionSignUpUser({
       emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}api/auth/callback`,
     },
   });
-  return response;
+
+  if (response.error) {
+    return { error: { message: response.error.message } };
+  }
+
+  // Auto-confirm user for local development if SERVICE_ROLE_KEY is present
+  if (process.env.SERVICE_ROLE_KEY && response.data.user?.id) {
+    const adminSupabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SERVICE_ROLE_KEY,
+      {
+        cookies: {
+          getAll() { return []; },
+          setAll() {}
+        }
+      }
+    );
+    await adminSupabase.auth.admin.updateUserById(response.data.user.id, { email_confirm: true });
+  }
+
+  return JSON.parse(JSON.stringify(response));
 }

@@ -1,3 +1,121 @@
+// import { relations, sql } from 'drizzle-orm';
+// import {
+//     boolean,
+//     integer,
+//     jsonb,
+//     pgTable,
+//     text,
+//     timestamp,
+//     uuid,
+//     pgEnum,
+//     foreignKey,
+//     pgPolicy,
+//     check,
+//     bigint,
+// } from 'drizzle-orm/pg-core';
+
+// //import this custom enum from schema in migrations since 
+// //subsciptionStatus is used in table but not defined here
+// // import { subscriptionStatus } from '../../../migrations/schema';
+
+// export const workspaces = pgTable('workspaces', {
+//     id: uuid('id').defaultRandom().primaryKey().notNull(),
+//     createdAt: timestamp('created_at', {
+//         withTimezone: true,
+//         mode: 'string',
+//     })
+//         .defaultNow()
+//         .notNull(),
+//     workspaceOwner: uuid('workspace_owner').notNull(),
+//     title: text('title').notNull(),
+//     iconId: text('icon_id').notNull(),
+//     data: text('data'),
+//     inTrash: text('in_trash'),
+//     logo: text('logo'),
+//     bannerUrl: text('banner_url'),
+// });
+
+// export const folders = pgTable('folders', {
+//     id: uuid('id').defaultRandom().primaryKey().notNull(),
+//     createdAt: timestamp('created_at', {
+//         withTimezone: true,
+//         mode: 'string',
+//     })
+//         .defaultNow()
+//         .notNull(),
+//     title: text('title').notNull(),
+//     iconId: text('icon_id').notNull(),
+//     data: text('data'),
+//     inTrash: text('in_trash'),
+//     bannerUrl: text('banner_url'),
+//     workspaceId: uuid('workspace_id')
+//         .notNull()
+//         .references(() => workspaces.id, {
+//             onDelete: 'cascade',
+//         }),
+// });
+
+// export const files = pgTable('files', {
+//     id: uuid('id').defaultRandom().primaryKey().notNull(),
+//     createdAt: timestamp('created_at', {
+//         withTimezone: true,
+//         mode: 'string',
+//     })
+//         .defaultNow()
+//         .notNull(),
+//     title: text('title').notNull(),
+//     iconId: text('icon_id').notNull(),
+//     data: text('data'),
+//     inTrash: text('in_trash'),
+//     bannerUrl: text('banner_url'),
+//     workspaceId: uuid('workspace_id')
+//         .notNull()
+//         .references(() => workspaces.id, {
+//             onDelete: 'cascade',
+//         }),
+//     folderId: uuid('folder_id')
+//         .notNull()
+//         .references(() => folders.id, {
+//             onDelete: 'cascade',
+//         }),
+// });
+
+// //he asked to save the subscription schema here due to some
+// //mismatch we might face upon pulling this over n over
+// // export const subscriptions = pgTable("subscriptions", {
+// //     id: text().primaryKey().notNull(),
+// //     userId: uuid("user_id").notNull(),
+// //     status: subscriptionStatus(),
+// //     metadata: jsonb(),
+// //     priceId: text("price_id"),
+// //     quantity: integer(),
+// //     cancelAtPeriodEnd: boolean("cancel_at_period_end"),
+// //     created: timestamp({ withTimezone: true, mode: 'string' }).default(sql`timezone('utc'::text, now())`).notNull(),
+// //     currentPeriodStart: timestamp("current_period_start", { withTimezone: true, mode: 'string' }).default(sql`timezone('utc'::text, now())`).notNull(),
+// //     currentPeriodEnd: timestamp("current_period_end", { withTimezone: true, mode: 'string' }).default(sql`timezone('utc'::text, now())`).notNull(),
+// //     endedAt: timestamp("ended_at", { withTimezone: true, mode: 'string' }).default(sql`timezone('utc'::text, now())`),
+// //     cancelAt: timestamp("cancel_at", { withTimezone: true, mode: 'string' }).default(sql`timezone('utc'::text, now())`),
+// //     canceledAt: timestamp("canceled_at", { withTimezone: true, mode: 'string' }).default(sql`timezone('utc'::text, now())`),
+// //     trialStart: timestamp("trial_start", { withTimezone: true, mode: 'string' }).default(sql`timezone('utc'::text, now())`),
+// //     trialEnd: timestamp("trial_end", { withTimezone: true, mode: 'string' }).default(sql`timezone('utc'::text, now())`),
+// // });
+
+// export const collaborators = pgTable('collaborators', {
+//     id: uuid('id').defaultRandom().primaryKey().notNull(),
+//     workspaceId: uuid('workspace_id')
+//         .notNull()
+//         .references(() => workspaces.id, { onDelete: 'cascade' }),
+//     createdAt: timestamp('created_at', {
+//         withTimezone: true,
+//         mode: 'string',
+//     })
+//         .defaultNow()
+//         .notNull(),
+//     userId: uuid('user_id')
+//         .notNull()
+//         .references(() => users.id, { onDelete: 'cascade' }),
+// });
+
 import { relations, sql } from 'drizzle-orm';
 import {
     boolean,
@@ -7,16 +125,26 @@ import {
     text,
     timestamp,
     uuid,
-    pgEnum,
-    foreignKey,
-    pgPolicy,
-    check,
-    bigint,
 } from 'drizzle-orm/pg-core';
+import {
+    customers,
+    prices,
+    pricingPlanInterval,
+    pricingType,
+    products,
+    subscriptionStatus,
+    users,
+} from '../../../migrations/schema';
 
-//import this custom enum from schema in migrations since 
-//subsciptionStatus is used in table but not defined here
-// import { subscriptionStatus } from '../../../migrations/schema';
+export {
+    customers,
+    prices,
+    pricingPlanInterval,
+    pricingType,
+    products,
+    subscriptionStatus,
+    users,
+};
 
 export const workspaces = pgTable('workspaces', {
     id: uuid('id').defaultRandom().primaryKey().notNull(),
@@ -29,13 +157,15 @@ export const workspaces = pgTable('workspaces', {
     workspaceOwner: uuid('workspace_owner').notNull(),
     title: text('title').notNull(),
     iconId: text('icon_id').notNull(),
-    data: text('data'),
+    novelData: text('novel_data'),
+    blocknoteData: text('blocknote_data'),
+    quillData: text('quill_data'),
     inTrash: text('in_trash'),
     logo: text('logo'),
     bannerUrl: text('banner_url'),
 });
 
-export const folders = pgTable('folders', {
+export const pages = pgTable('pages', {
     id: uuid('id').defaultRandom().primaryKey().notNull(),
     createdAt: timestamp('created_at', {
         withTimezone: true,
@@ -45,17 +175,96 @@ export const folders = pgTable('folders', {
         .notNull(),
     title: text('title').notNull(),
     iconId: text('icon_id').notNull(),
-    data: text('data'),
+    novelData: text('novel_data'),
+    blocknoteData: text('blocknote_data'),
+    quillData: text('quill_data'),
     inTrash: text('in_trash'),
     bannerUrl: text('banner_url'),
+    type: text('type').default('novel').notNull(),
     workspaceId: uuid('workspace_id')
         .notNull()
         .references(() => workspaces.id, {
             onDelete: 'cascade',
         }),
+    parentId: uuid('parent_id').references((): any => pages.id, {
+        onDelete: 'cascade',
+    }),
 });
 
-export const files = pgTable('files', {
+export const subscriptions = pgTable('subscriptions', {
+    id: text('id').primaryKey().notNull(),
+    userId: uuid('user_id').notNull(),
+    status: subscriptionStatus('status'),
+    metadata: jsonb('metadata'),
+    priceId: text('price_id').references(() => prices.id),
+    quantity: integer('quantity'),
+    cancelAtPeriodEnd: boolean('cancel_at_period_end'),
+    created: timestamp('created', { withTimezone: true, mode: 'string' })
+        .default(sql`now()`)
+        .notNull(),
+    currentPeriodStart: timestamp('current_period_start', {
+        withTimezone: true,
+        mode: 'string',
+    })
+        .default(sql`now()`)
+        .notNull(),
+    currentPeriodEnd: timestamp('current_period_end', {
+        withTimezone: true,
+        mode: 'string',
+    })
+        .default(sql`now()`)
+        .notNull(),
+    endedAt: timestamp('ended_at', {
+        withTimezone: true,
+        mode: 'string',
+    }).default(sql`now()`),
+    cancelAt: timestamp('cancel_at', {
+        withTimezone: true,
+        mode: 'string',
+    }).default(sql`now()`),
+    canceledAt: timestamp('canceled_at', {
+        withTimezone: true,
+        mode: 'string',
+    }).default(sql`now()`),
+    trialStart: timestamp('trial_start', {
+        withTimezone: true,
+        mode: 'string',
+    }).default(sql`now()`),
+    trialEnd: timestamp('trial_end', {
+        withTimezone: true,
+        mode: 'string',
+    }).default(sql`now()`),
+});
+
+export const collaborators = pgTable('collaborators', {
+    id: uuid('id').defaultRandom().primaryKey().notNull(),
+    workspaceId: uuid('workspace_id')
+        .notNull()
+        .references(() => workspaces.id, { onDelete: 'cascade' }),
+    createdAt: timestamp('created_at', {
+        withTimezone: true,
+        mode: 'string',
+    })
+        .defaultNow()
+        .notNull(),
+    userId: uuid('user_id')
+        .notNull()
+        .references(() => users.id, { onDelete: 'cascade' }),
+});
+
+//Dont Delete!!!
+export const productsRelations = relations(products, ({ many }) => ({
+    prices: many(prices),
+}));
+
+export const pricesRelations = relations(prices, ({ one }) => ({
+    product: one(products, {
+        fields: [prices.productId],
+        references: [products.id],
+    }),
+}));
+
+export const aiChats = pgTable('ai_chats', {
     id: uuid('id').defaultRandom().primaryKey().notNull(),
     createdAt: timestamp('created_at', {
         withTimezone: true,
@@ -63,39 +272,9 @@ export const files = pgTable('files', {
     })
         .defaultNow()
         .notNull(),
-    title: text('title').notNull(),
-    iconId: text('icon_id').notNull(),
-    data: text('data'),
-    inTrash: text('in_trash'),
-    bannerUrl: text('banner_url'),
-    workspaceId: uuid('workspace_id')
+    userId: uuid('user_id')
         .notNull()
-        .references(() => workspaces.id, {
-            onDelete: 'cascade',
-        }),
-    folderId: uuid('folder_id')
-        .notNull()
-        .references(() => folders.id, {
-            onDelete: 'cascade',
-        }),
+        .references(() => users.id, { onDelete: 'cascade' }),
+    fileId: uuid('file_id').notNull(),
+    messages: jsonb('messages').default([]).notNull(),
 });
-
-//he asked to save the subscription schema here due to some
-//mismatch we might face upon pulling this over n over
-// export const subscriptions = pgTable("subscriptions", {
-//     id: text().primaryKey().notNull(),
-//     userId: uuid("user_id").notNull(),
-//     status: subscriptionStatus(),
-//     metadata: jsonb(),
-//     priceId: text("price_id"),
-//     quantity: integer(),
-//     cancelAtPeriodEnd: boolean("cancel_at_period_end"),
-//     created: timestamp({ withTimezone: true, mode: 'string' }).default(sql`timezone('utc'::text, now())`).notNull(),
-//     currentPeriodStart: timestamp("current_period_start", { withTimezone: true, mode: 'string' }).default(sql`timezone('utc'::text, now())`).notNull(),
-//     currentPeriodEnd: timestamp("current_period_end", { withTimezone: true, mode: 'string' }).default(sql`timezone('utc'::text, now())`).notNull(),
-//     endedAt: timestamp("ended_at", { withTimezone: true, mode: 'string' }).default(sql`timezone('utc'::text, now())`),
-//     cancelAt: timestamp("cancel_at", { withTimezone: true, mode: 'string' }).default(sql`timezone('utc'::text, now())`),
-//     canceledAt: timestamp("canceled_at", { withTimezone: true, mode: 'string' }).default(sql`timezone('utc'::text, now())`),
-//     trialStart: timestamp("trial_start", { withTimezone: true, mode: 'string' }).default(sql`timezone('utc'::text, now())`),
-//     trialEnd: timestamp("trial_end", { withTimezone: true, mode: 'string' }).default(sql`timezone('utc'::text, now())`),
-// });

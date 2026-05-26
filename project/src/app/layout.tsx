@@ -3,9 +3,13 @@ import { Geist, Noto_Serif_Georgian, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import db from "@/lib/supabase/db";
 import { ThemeProvider } from "@/lib/providers/next-theme-provider";
+import AppStateProvider from "@/lib/providers/state-provider";
+import { SupabaseUserProvider } from "@/lib/providers/supabase-user-provider";
 //added this while making login page
 import { DM_Sans } from "next/font/google";
 import { twMerge } from "tailwind-merge";
+import { Toaster } from "@/components/ui/sonner";
+
 const inter = DM_Sans({ subsets: ["latin"] });
 
 const geistSans = Geist({
@@ -48,9 +52,15 @@ export default function RootLayout({
 					enableSystem
 					disableTransitionOnChange
 				>
-					{children}
+					<AppStateProvider>
+						<SupabaseUserProvider>
+							{children}
+							<Toaster position="top-center" offset={0} />
+						</SupabaseUserProvider>
+					</AppStateProvider>
 				</ThemeProvider>
 			</body>
 		</html>
 	);
 }
+

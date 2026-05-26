@@ -10,20 +10,22 @@ const buttonVariants = cva(
 		variants: {
 			variant: {
 				default:
-					"bg-primary text-primary-foreground [a]:hover:bg-primary/80",
+					"cursor-pointer bg-primary text-primary-foreground [a]:hover:bg-primary/80",
 				outline:
-					"border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
+					"cursor-pointer border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
 				secondary:
-					"bg-secondary text-secondary-foreground hover:bg-secondary/80 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
-				ghost: "hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50",
+					"cursor-pointer bg-secondary text-secondary-foreground hover:bg-secondary/80 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
+				ghost:
+					"cursor-pointer hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50",
 				destructive:
-					"bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
-				link: "text-primary underline-offset-4 hover:underline",
+					"cursor-pointer bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
+				link:
+					"cursor-pointer text-primary underline-offset-4 hover:underline",
 				//added this later
 				"btn-primary":
-					" whitespace-nowrap hover:text-primary-foreground dark:bg-gradient-to-t dark:from-[#24232C] dark:to-[#100F18] dark:text-primary-foreground border hover:border-primary dark:border-[#464553] dark:hover:bg-accent hover:bg-primary dark:hover:border-muted-foreground text-lg font-normal",
+					"cursor-pointer whitespace-nowrap bg-gradient-to-r from-brand-primary-blue to-brand-primary-purple text-white hover:text-white/90 shadow-md hover:opacity-95 dark:bg-gradient-to-t dark:from-[#24232C] dark:to-[#100F18] dark:text-primary-foreground border hover:border-primary dark:border-[#464553] dark:hover:bg-accent hover:bg-primary dark:hover:border-muted-foreground text-lg font-normal",
 				"btn-secondary":
-					"whitespace-nowrap dark:text-primary-foreground text-lg font-normal",
+					"cursor-pointer whitespace-nowrap dark:text-primary-foreground text-lg font-normal",
 			},
 			size: {
 				default:

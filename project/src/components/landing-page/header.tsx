@@ -1,314 +1,127 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
-import Logo from "../../../public/cypresslogo.svg";
-
-import {
-	NavigationMenu,
-	NavigationMenuContent,
-	NavigationMenuIndicator,
-	NavigationMenuItem,
-	NavigationMenuLink,
-	NavigationMenuList,
-	NavigationMenuTrigger,
-	NavigationMenuViewport,
-	navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
-import { cn } from "@/lib/utils";
+import React, { useState, useEffect } from "react";
 import { Button } from "../ui/button";
+import { cn } from "@/lib/utils";
+import { Menu, X } from "lucide-react";
 
 const routes = [
 	{ title: "Features", href: "#features" },
-	{ title: "Reasources", href: "#resources" },
+	{ title: "Testimonials", href: "#testimonials" },
 	{ title: "Pricing", href: "#pricing" },
-	{ title: "Testimonials", href: "#testimonial" },
-];
-
-const components: { title: string; href: string; description: string }[] = [
-	{
-		title: "Alert Dialog",
-		href: "#",
-		description:
-			"A modal dialog that interrupts the user with important content and expects a response.",
-	},
-	{
-		title: "Hover Card",
-		href: "#",
-		description:
-			"For sighted users to preview content available behind a link.",
-	},
-	{
-		title: "Progress",
-		href: "#",
-		description:
-			"Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
-	},
-	{
-		title: "Scroll-area",
-		href: "#",
-		description: "Visually or semantically separates content.",
-	},
-	{
-		title: "Tabs",
-		href: "#",
-		description:
-			"A set of layered sections of content—known as tab panels—that are displayed one at a time.",
-	},
-	{
-		title: "Tooltip",
-		href: "#",
-		description:
-			"A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
-	},
 ];
 
 const Header = () => {
-	// const [path, setPath] = useState("#products");
-	const [path, setPath] = useState("#features");
+	const [scrolled, setScrolled] = useState(false);
+	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+	useEffect(() => {
+		const handleScroll = () => {
+			if (window.scrollY > 10) {
+				setScrolled(true);
+			} else {
+				setScrolled(false);
+			}
+		};
+		window.addEventListener("scroll", handleScroll);
+		return () => window.removeEventListener("scroll", handleScroll);
+	}, []);
+
 	return (
 		<header
-			className="p-4
-      flex
-      justify-center
-      items-center
-  "
+			className={cn(
+				"fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 py-4 flex items-center justify-between border-b",
+				scrolled
+					? "bg-background/80 dark:bg-background/40 backdrop-blur-xl border-border/40 shadow-sm"
+					: "bg-transparent border-transparent"
+			)}
 		>
+			{/* Logo Section */}
 			<Link
 				href={"/"}
-				className="w-full flex gap-2
-        justify-left items-center"
+				className="flex items-center gap-2.5 group relative"
 			>
-				<Image src={Logo} alt="Space Logo" width={25} height={25} />
-				<span
-					className="font-semibold
-          dark:text-white
-        "
-				>
+
+				<span className="relative font-bold text-2xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-brand-primary-blue to-brand-primary-purple w-[120px]">
 					Space.
 				</span>
 			</Link>
-			<NavigationMenu className="hidden md:block">
-				<NavigationMenuList className="gap-6">
-					<NavigationMenuItem>
-						<NavigationMenuTrigger
-							onClick={() => setPath("#resources")}
-							className={cn({
-								"dark:text-white": path === "#resources",
-								"dark:text-white/40": path !== "#resources",
-								"font-normal": true,
-								"text-xl": true,
-							})}
-						>
-							Resources
-						</NavigationMenuTrigger>
-						<NavigationMenuContent>
-							<ul
-								className="grid
-                gap-3
-                p-6
-                md:w-[400px]
-                ld:w-[500px]
-                lg:grid-cols-[.75fr_1fr]
-                "
-							>
-								{/*
-								did not like this welcome 
-								<li className="row-span-3">
-									<span
-										className="flex h-full w-full select-none
-                  flex-col
-                  justify-end
-                  rounded-md
-                  bg-gradient-to-b
-                  from-muted/50
-                  to-muted
-                  p-6 no-underline
-                  outline-none
-                  focus:shadow-md
-                  "
-									>
-										Welcome
-									</span>
-								</li> */}
-								<ListItem href="#" title="Introduction">
-									Re-usable components built using Radix UI
-									and Tailwind CSS.
-								</ListItem>
-								<ListItem href="#" title="Installation">
-									How to install dependencies and structure
-									your app.
-								</ListItem>
-								<ListItem href="#" title="Typography">
-									Styles for headings, paragraphs, lists...etc
-								</ListItem>
-							</ul>
-						</NavigationMenuContent>
-					</NavigationMenuItem>
-					<NavigationMenuItem>
-						<NavigationMenuTrigger
-							onClick={() => setPath("#pricing")}
-							className={cn({
-								"dark:text-white": path === "#pricing",
-								"dark:text-white/40": path !== "#pricing",
-								"font-normal": true,
-								"text-xl": true,
-							})}
-						>
-							Pricing
-						</NavigationMenuTrigger>
-						<NavigationMenuContent>
-							<ul className="grid w-[400px] gap-3 p-4  md:grid-row-2  ">
-								<ListItem title="Pro Plan" href={"#"}>
-									Unlock full power with collaboration.
-								</ListItem>
-								<ListItem title={"free Plan"} href={"#"}>
-									Great for teams just starting out.
-								</ListItem>
-							</ul>
-						</NavigationMenuContent>
-					</NavigationMenuItem>
-					<NavigationMenuItem>
-						{/*
-						<NavigationMenuContent>
-*/}
-						<NavigationMenuTrigger
-							onClick={() => setPath("#features")}
-							className={cn({
-								"dark:text-white": path === "#features",
-								"dark:text-white/40": path !== "#features",
-								"font-normal": true,
-								"text-xl": true,
-							})}
-						>
-							Components
-						</NavigationMenuTrigger>
-						<NavigationMenuContent>
-							<ul
-								className="grid w-[400px]
-              gap-3
-              p-4
-              md:w-[500px]
-              md:grid-cols-2 
-              lg:w-[600px]
-              "
-							>
-								{components.map((component) => (
-									<ListItem
-										key={component.title}
-										title={component.title}
-										href={component.href}
-									>
-										{component.description}
-									</ListItem>
-								))}
-							</ul>
-						</NavigationMenuContent>
-					</NavigationMenuItem>
-					<NavigationMenuItem>
-						{/*
-						<NavigationMenuLink
-							className={cn(navigationMenuTriggerStyle(), {
-								"dark:text-white": path === "#testimonials",
-								"dark:text-white/40": path !== "#testimonials",
-								"font-normal": true,
-								"text-xl": true,
-							})}
-						>
-							Testimonial
-						</NavigationMenuLink>
-*/}
-						<Link href="#testimonial" legacyBehavior passHref>
-							<NavigationMenuLink
-								onClick={() => setPath("#testimonial")}
-								className={cn(navigationMenuTriggerStyle(), {
-									"dark:text-white": path === "#testimonial",
-									"dark:text-white/40": path !== "#testimonial",
-									"font-normal": true,
-									"text-xl": true,
-								})}
-							>
-								Testimonial
-							</NavigationMenuLink>
-						</Link>
-					</NavigationMenuItem>
-				</NavigationMenuList>
-			</NavigationMenu>
-			<aside
-				className="flex
-        w-full
-        gap-2
-        justify-end
-      "
-			>
+
+			{/* Desktop Navigation */}
+			<nav className="hidden md:flex items-center gap-20  border border-black/20 dark:border-border/30 px-4 py-1.5 rounded-full backdrop-blur-md">
+				{routes.map((route) => (
+					<Link
+						key={route.title}
+						href={route.href}
+						className="px-4 py-1.5 rounded-full text-sm font-medium text-muted-foreground hover:text-foreground transition-colors relative group"
+					>
+						<span className="relative z-10">{route.title}</span>
+						<span className="absolute inset-0 bg-black/5 dark:bg-white/10 rounded-full scale-75 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200" />
+					</Link>
+				))}
+			</nav>
+
+			{/* CTA Buttons */}
+			<div className="hidden md:flex items-center gap-1.5">
 				<Link href={"/login"}>
 					<Button
-						variant="btn-secondary"
-						className=" p-1 hidden sm:block"
+						variant="outline"
+						className="text-sm px-2 py-2 h-auto"
 					>
 						Login
 					</Button>
 				</Link>
 				<Link href="/signup">
-					<Button variant="btn-primary" className="whitespace-nowrap">
+					<Button
+						variant="outline"
+						className="text-sm px-2 py-2 h-auto"
+					>
 						Sign Up
 					</Button>
 				</Link>
-			</aside>
+			</div>
+
+			{/* Mobile Menu Toggle */}
+			<button
+				onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+				className="flex md:hidden p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 border border-transparent hover:border-border/30 transition-all"
+				aria-label="Toggle Menu"
+			>
+				{mobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+			</button>
+
+			{/* Mobile Navigation Dropdown */}
+			{mobileMenuOpen && (
+				<div className="absolute top-[73px] left-0 right-0 bg-background/95 backdrop-blur-2xl border-b border-border/50 py-6 px-6 flex flex-col gap-5 md:hidden animate-in fade-in slide-in-from-top-4 duration-200 shadow-xl">
+					<div className="flex flex-col gap-3">
+						{routes.map((route) => (
+							<Link
+								key={route.title}
+								href={route.href}
+								onClick={() => setMobileMenuOpen(false)}
+								className="text-lg font-medium text-muted-foreground hover:text-foreground py-2 border-b border-border/10 transition-colors"
+							>
+								{route.title}
+							</Link>
+						))}
+					</div>
+					<div className="flex flex-col gap-3 pt-2">
+						<Link href={"/login"} onClick={() => setMobileMenuOpen(false)} className="w-full">
+							<Button variant="outline" className="w-full py-3 rounded-full text-base">
+								Login
+							</Button>
+						</Link>
+						<Link href="/signup" onClick={() => setMobileMenuOpen(false)} className="w-full">
+							<Button variant="btn-primary" className="w-full py-3 rounded-full text-base">
+								Sign Up
+							</Button>
+						</Link>
+					</div>
+				</div>
+			)}
 		</header>
 	);
 };
 
 export default Header;
-
-const ListItem = React.forwardRef<
-	React.ElementRef<"a">,
-	React.ComponentPropsWithoutRef<"a">
->(({ className, title, children, ...props }, ref) => {
-	return (
-		<li>
-			<NavigationMenuLink asChild>
-				<a
-					ref={ref}
-					className={cn(
-						"group block select-none space-y-1 font-medium leading-none",
-					)}
-					{...props}
-				>
-					{/*
-					<div className="text-white text-sm font-medium leading-none">
-						{title}
-					</div>
-					<p
-						className="group-hover:text-white/70
-            line-clamp-2
-            text-sm
-            leading-snug
-            text-white/40
-          "
-					>
-						{children}
-					</p>
-*/}
-					<div className="dark:text-white text-foreground text-sm font-medium leading-none">
-						{title}
-					</div>
-					<p
-						className="group-hover:dark:text-white/70
-            group-hover:text-foreground/70
-            line-clamp-2
-            text-sm
-            leading-snug
-            dark:text-white/40
-            text-muted-foreground
-          "
-					>
-						{children}
-					</p>
-				</a>
-			</NavigationMenuLink>
-		</li>
-	);
-});
-
-ListItem.displayName = "ListItem";

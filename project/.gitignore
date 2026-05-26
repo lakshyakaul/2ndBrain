@@ -40,3 +40,22 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# vscode
+.vscode
+
+# Generated debug scripts and temp files
+updateUser.js
+migrate-collaborators.js
+error.html
+ts_errors.txt
+.agents/
+fix-imports.js
+fix-imports-2.js
+migrate.js
+reorganize.js
+reorganize-imports.js
+reorganize-imports-fixed.js
+reorganize-imports-fixed2.js
+skills-lock.json
+update-navbar.js

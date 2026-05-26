@@ -13,101 +13,42 @@ export const CLIENTS = [
 ];
 
 export const USERS = [
-    {
-        name: 'Lebron',
-        message:
-            'Oh yeah, this is the one.',
-    },
-    {
-        name: 'Trump',
-        message:
-            "This app is so so GOOD, the developer is a REALLY amazing guy I must say!",
-    },
-    {
-        name: 'Big Yahu',
-        message:
-            "Our greatest asset.",
-    },
-    {
-        name: 'Gurt',
-        message:
-            'Yo',
-    },
-    {
-        name: 'Squidward',
-        message:
-            "Spongeboy me bob",
-    },
-    {
-        name: 'Dexter',
-        message:
-            "Tonight's the night... and it's gonna happen again...",
-    },
-    {
-        name: 'Nolan',
-        message:
-            'Absolute cinema.',
-    },
-    {
-        name: 'Hank',
-        message:
-            "I don't know man. This app has been acting sus lately. Almost like we have an imposter among us.",
-    },
-    {
-        name: 'Vineet',
-        message:
-            "Great work twin, you're number 1.",
-    },
-    {
-        name: 'Negi',
-        message:
-            "Son",
-    },
-    {
-        name: 'Katherine',
-        message:
-            "Cypress is a lifesaver for our cross-functional teams. We're more productive, and there's a shared sense of responsibility for product quality.",
-    },
-    {
-        name: 'Liam',
-        message:
-            "Cypress has helped us maintain high standards of quality. Our team's collaboration has improved, resulting in faster development cycles.",
-    },
-    {
-        name: 'Mia',
-        message:
-            "Cypress is a powerful tool that improved our productivity and collaboration. It's now an integral part of our development process.",
-    },
-    {
-        name: 'Nathan',
-        message:
-            "Cypress's user-friendly interface and detailed reporting have made testing a breeze. Our team's productivity is at an all-time high.",
-    },
-    {
-        name: 'Olivia',
-        message:
-            "We saw immediate benefits in terms of productivity and collaboration after adopting Cypress. It's an essential tool for our development workflow.",
-    },
-    {
-        name: 'Paul',
-        message:
-            "Cypress has streamlined our testing process and brought our teams closer. We're more efficient and deliver better results.",
-    },
-    {
-        name: 'Quinn',
-        message:
-            'Cypress has been a game-changer for us. Our productivity and collaboration have improved significantly, leading to better software.',
-    },
-    {
-        name: 'Rachel',
-        message:
-            'Thanks to Cypress, our testing process is now a seamless part of our development cycle. Our teams collaborate effortlessly.',
-    },
-    {
-        name: 'Sam',
-        message:
-            'Cypress is a fantastic tool that has revolutionized our workflow. Our productivity and collaboration have reached new heights.',
-    },
+	{
+		name: "Sarah Jenkins",
+		role: "Product Lead",
+		avatar: "/avatars/1.png",
+		message: "Space has completely unified our team's roadmap and specs. The folder organization is exceptionally clean, and real-time cursor tracking keeps everyone perfectly aligned during planning."
+	},
+	{
+		name: "Alex Rivera",
+		role: "Lead Engineer",
+		avatar: "/avatars/2.png",
+		message: "Our team switched from Notion to Space. The performance difference is night and day—pages load instantly and collaborative document edits sync immediately without conflicts."
+	},
+	{
+		name: "Emma Zhang",
+		role: "UX Designer",
+		avatar: "/avatars/3.png",
+		message: "I love how minimal and focused Space is. The clean typography and workspace layout keep me completely in flow while documenting our design systems."
+	},
+	{
+		name: "David K.",
+		role: "Startup Founder",
+		avatar: "/avatars/4.png",
+		message: "As a fast-growing startup, we need a single source of truth. Space's calendar integration paired with real-time collaborative docs solved our documentation chaos."
+	},
+	{
+		name: "Sophia Martinez",
+		role: "Developer Advocate",
+		avatar: "/avatars/5.png",
+		message: "The page history rollback in Space is an absolute lifesaver. Being able to easily restore previous document versions up to 1 year back gives our team total peace of mind."
+	},
+	{
+		name: "James Cole",
+		role: "Creative Director",
+		avatar: "/avatars/6.png",
+		message: "Beautiful design paired with exceptional performance. Space has become the creative hub for all our brainstorms, meeting notes, and copy drafts."
+	}
 ];
 
 export const PRICING_CARDS = [
@@ -125,13 +66,13 @@ export const PRICING_CARDS = [
     },
     {
         planType: 'Pro Plan',
-        price: '1188',
-        description: 'Billed annually. ₹99 billed monthly',
+        price: '99',
+        description: 'Billed annually',
         highlightFeature: 'Everything in free +',
         freatures: [
             'Unlimited blocks for teams',
             'Unlimited file uploads',
-            '1 year day page history',
+            '1 year page history',
             'Invite 10 guests',
         ],
     },
@@ -139,4 +80,4 @@ export const PRICING_CARDS = [
 
 export const PRICING_PLANS = { proplan: 'Pro Plan', freeplan: 'Free Plan' };
 
-export const MAX_FOLDERS_FREE_PLAN = 3;
+export const MAX_FOLDERS_FREE_PLAN = 10;

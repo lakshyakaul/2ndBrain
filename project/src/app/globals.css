@@ -10,19 +10,19 @@ body {
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 224 71.4% 4.1%;
+    --foreground: 224 71.4% 0%;
     --card: 0 0% 100%;
-    --card-foreground: 224 71.4% 4.1%;
+    --card-foreground: 224 71.4% 0%;
     --popover: 0 0% 100%;
-    --popover-foreground: 224 71.4% 4.1%;
+    --popover-foreground: 224 71.4% 0%;
     --primary: 266, 100%, 50%;
     --primary-foreground: 210 20% 98%;
     --secondary: 220 14.3% 95.9%;
     --secondary-foreground: 220.9 39.3% 11%;
     --muted: 220 14.3% 95.9%;
-    --muted-foreground: 220 8.9% 46.1%;
+    --muted-foreground: 220 8.9% 20%;
     --accent: 220 14.3% 95.9%;
-    --accent-foreground: 220.9 39.3% 11%;
+    --accent-foreground: 220.9 39.3% 0%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 20% 98%;
     --border: 220 13% 91%;
@@ -43,7 +43,7 @@ body {
     --secondary: 215 27.9% 16.9%;
     --secondary-foreground: 210 20% 98%;
     --muted: 215 27.9% 16.9%;
-    --muted-foreground: 217.9 10.6% 30.9%;
+    --muted-foreground: 217.9 10.6% 65%;
     --accent: 215 27.9% 16.9%;
     --accent-foreground: 210 20% 98%;
     --destructive: 0 62.8% 30.6%;
@@ -282,24 +282,49 @@ body {
 
 
 
-/* .ql-toolbar::-webkit-scrollbar {
-  display: none;
-}
-
-.ql-toolbar {
-  @apply flex flex-wrap items-center justify-center dark:bg-background/70 bg-white/40 backdrop-blur-md z-40 sticky top-0 !border-none left-0 right-0;
-}
-
-.ql-formats {
-  @apply flex flex-shrink-0;
-}
-
 .ql-container {
   @apply !border-none;
 }
 
-.ql-editor>p,
-ol,
-ul {
-  @apply dark:text-washed-purple-700;
-} */
+/* Hide scrollbar for Chrome, Safari and Opera */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+* {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+
+/* Quill Bubble Toolbar Fixes */
+.ql-toolbar.ql-bubble {
+  @apply bg-background border-border rounded-md shadow-md p-1 flex flex-wrap gap-1 items-center;
+}
+.ql-toolbar.ql-bubble button {
+  @apply p-1 rounded hover:bg-muted transition-colors flex items-center justify-center;
+}
+.ql-toolbar.ql-bubble button svg {
+  @apply w-4 h-4;
+}
+.ql-toolbar.ql-bubble .ql-stroke {
+  @apply stroke-foreground;
+}
+.ql-toolbar.ql-bubble .ql-fill {
+  @apply fill-foreground;
+}
+.ql-toolbar.ql-bubble .ql-picker {
+  @apply text-foreground;
+}
+.ql-toolbar.ql-bubble .ql-picker-options {
+  @apply bg-background border border-border shadow-lg;
+}
+.ql-toolbar.ql-bubble .ql-tooltip {
+  @apply bg-background border border-border shadow-md rounded-md p-2;
+}
+
+/* Ensure quill editor itself has padding so text aligns with title and doesn't touch edges */
+.ql-editor {
+  @apply px-7 py-4;
+}

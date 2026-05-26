@@ -6,16 +6,15 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import React, { useMemo, useState } from 'react';
+import React, { Suspense, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Field, FieldError, FieldGroup } from '@/components/ui/field';
 
-import Logo from '../../../../public/cypresslogo.svg';
+import Logo from '../../../../public/space.svg';
 import Loader from '@/components/global/loader';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { MailCheck } from 'lucide-react';
-import { FormSchema } from '@/lib/types';
 import { actionSignUpUser } from '@/lib/server-actions/auth-actions';
 
 const SignUpFormSchema = z
@@ -35,7 +34,7 @@ const SignUpFormSchema = z
         path: ['confirmPassword'],
     });
 
-const Signup = () => {
+const SignupForm = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [submitError, setSubmitError] = useState('');
@@ -207,6 +206,14 @@ const Signup = () => {
                 </>
             )}
         </form>
+    );
+};
+
+const Signup = () => {
+    return (
+        <Suspense fallback={<Loader />}>
+            <SignupForm />
+        </Suspense>
     );
 };
 
