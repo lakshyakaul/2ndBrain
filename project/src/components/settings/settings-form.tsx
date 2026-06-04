@@ -52,7 +52,7 @@ import { Button } from '../ui/button';
 import { ScrollArea } from '../ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Alert, AlertDescription } from '../ui/alert';
-import CypressProfileIcon from '../icons/cypressProfileIcon';
+import ProfileIcon from '../icons/profileIcon';
 import LogoutButton from '@/components/app-navbar/profile/logout-button';
 import Link from 'next/link';
 import { useSubscriptionModal } from '@/lib/providers/subscription-modal-provider';
@@ -383,7 +383,7 @@ const SettingsForm = () => {
           <Avatar>
             <AvatarImage src={''} />
             <AvatarFallback>
-              <CypressProfileIcon />
+              <ProfileIcon />
             </AvatarFallback>
           </Avatar>
           <div className="flex flex-col ml-6">

@@ -23,7 +23,7 @@ export default function AIChatSidebar({ className }: AIChatSidebarProps) {
   const [input, setInput] = useState('');
   // AI SDK v3 chat flow: sendMessage is the supported entrypoint for this app version.
   // We only send the active editor snapshot as context; the model should not mutate UI state directly.
-  const { messages, sendMessage, status } = useChat({
+  const { messages, sendMessage, status, addToolResult } = useChat({
     transport: new DefaultChatTransport({ api: '/api/ai/sidebar-chat' }),
     onError: (error) => {
       console.error('[AI Workflow Error] useChat onError:', error);
@@ -70,6 +70,67 @@ export default function AIChatSidebar({ className }: AIChatSidebarProps) {
     }
   }, [messages]);
 
+  // Execute client-side tool calls
+  useEffect(() => {
+    if (!editor || !messages.length) return;
+    const lastMessage = messages[messages.length - 1];
+
+    console.log('[AI Workflow DEBUG] Client lastMessage:', lastMessage.role, lastMessage.parts?.map(p => p.type));
+
+    if (lastMessage.role === 'assistant' && lastMessage.parts) {
+      lastMessage.parts.forEach(async (part) => {
+        console.log('[AI Workflow DEBUG] Part details:', JSON.stringify(part));
+
+        // In AI SDK 3.1+, static tools have type: 'tool-${toolName}' and dynamic tools have type: 'dynamic-tool'
+        const isToolPart = part.type.startsWith('tool-') || part.type === 'dynamic-tool';
+
+        if (isToolPart) {
+          const invocation = part as any;
+          const toolName = part.type === 'dynamic-tool' ? invocation.toolName : part.type.replace('tool-', '');
+
+          // Execute if in 'call' state (some versions might use 'input-available' when streaming finishes, checking both)
+          if (invocation.state !== 'call' && invocation.state !== 'input-available') return;
+
+          console.log('[AI Workflow] Executing tool:', toolName, invocation.input || invocation.args);
+          try {
+            const args = invocation.input || invocation.args; // Fallback for diff AI SDK versions
+            if (toolName === 'insertBlock') {
+              const { text, placement, referenceBlockId } = args;
+              const newBlocks = await editor.tryParseMarkdownToBlocks(text);
+              if (placement === 'end') {
+                editor.insertBlocks(newBlocks, editor.document[editor.document.length - 1], 'after');
+              } else if (placement === 'start') {
+                editor.insertBlocks(newBlocks, editor.document[0], 'before');
+              } else if (placement === 'after' && referenceBlockId) {
+                editor.insertBlocks(newBlocks, referenceBlockId, 'after');
+              }
+              addToolResult({ tool: toolName, toolCallId: invocation.toolCallId, output: 'Block inserted successfully.' });
+            } else if (toolName === 'updateBlock') {
+              const { id, text } = args;
+              const parsed = await editor.tryParseMarkdownToBlocks(text);
+              editor.updateBlock(id, parsed[0] || { type: 'paragraph', content: text });
+              addToolResult({ tool: toolName, toolCallId: invocation.toolCallId, output: 'Block updated successfully.' });
+            } else if (toolName === 'deleteBlock') {
+              const { id } = args;
+              editor.removeBlocks([id]);
+              addToolResult({ tool: toolName, toolCallId: invocation.toolCallId, output: 'Block deleted successfully.' });
+            } else if (toolName === 'replaceDocument') {
+              const { content } = args;
+              const newBlocks = await editor.tryParseMarkdownToBlocks(content);
+              editor.replaceBlocks(editor.document, newBlocks);
+              addToolResult({ tool: toolName, toolCallId: invocation.toolCallId, output: 'Document replaced successfully.' });
+            } else {
+              addToolResult({ tool: toolName, toolCallId: invocation.toolCallId, output: 'Unknown tool' });
+            }
+          } catch (err: any) {
+            console.error('[AI Workflow ERROR] Tool execution failed:', err);
+            addToolResult({ tool: toolName, toolCallId: invocation.toolCallId, output: `Failed: ${err.message}` });
+          }
+        }
+      });
+    }
+  }, [messages, editor, addToolResult]);
+
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom
@@ -87,7 +148,7 @@ export default function AIChatSidebar({ className }: AIChatSidebarProps) {
       {/* Header */}
       <div className="flex items-center gap-2 p-4 border-b border-border/50 shrink-0">
         <div className="flex flex-col">
-          <span className="font-semibold text-sm">Space AI</span>
+          <span className="font-semibold text-sm">Assistant</span>
           <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
             {editor ? 'Connected to Canvas' : 'Waiting for Editor...'}
           </span>
@@ -100,7 +161,7 @@ export default function AIChatSidebar({ className }: AIChatSidebarProps) {
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground space-y-3 mt-10">
               <Bot size={40} className="opacity-20" />
-              <p className="text-sm">I am your Space AI agent.<br />I can read your canvas and help you write!</p>
+              <p className="text-sm">I am your AI agent.<br />I can read your canvas and help you write!</p>
             </div>
           ) : (
             <div className="flex flex-col gap-4 pb-4">
@@ -120,9 +181,39 @@ export default function AIChatSidebar({ className }: AIChatSidebarProps) {
                       "px-3 py-2 rounded-xl whitespace-pre-wrap leading-relaxed",
                       m.role === 'user' ? "bg-primary text-primary-foreground rounded-tr-sm" : "bg-muted border border-border/30 rounded-tl-sm"
                     )}>
-                      {m.parts?.map((part, index) => part.type === 'text' ? (
-                        <span key={index}>{part.text}</span>
-                      ) : null)}
+                      {m.parts?.map((part, index) => {
+                        if (part.type === 'text') {
+                          return <span key={index}>{part.text}</span>;
+                        }
+                        const isToolPart = part.type.startsWith('tool-') || part.type === 'dynamic-tool';
+                        if (isToolPart) {
+                          const toolInvocation = part as any;
+                          const toolName = part.type === 'dynamic-tool' ? toolInvocation.toolName : part.type.replace('tool-', '');
+
+                          return (
+                            <div key={index} className="mt-2 p-2 bg-background/50 rounded border border-border/30 text-xs text-muted-foreground flex flex-col gap-1">
+                              <div className="flex items-center gap-2">
+                                <span className="font-semibold text-primary">
+                                  {toolName === 'insertBlock' ? 'Inserting block' :
+                                    toolName === 'updateBlock' ? 'Updating block' :
+                                      toolName === 'deleteBlock' ? 'Deleting block' :
+                                        toolName === 'replaceDocument' ? 'Replacing document' : toolName}
+                                </span>
+                                {toolInvocation.state === 'input-available' || toolInvocation.state === 'call' ? (
+                                  <span className="text-[10px] bg-primary/20 text-primary px-1.5 py-0.5 rounded">Running</span>
+                                ) : (
+                                  <span className="text-[10px] bg-green-500/20 text-green-600 dark:text-green-400 px-1.5 py-0.5 rounded">✓ Success</span>
+                                )}
+                              </div>
+                              {/* Optionally render arguments for debugging */}
+                              {/* <pre className="overflow-x-auto text-[10px] opacity-70">
+                                {JSON.stringify(toolInvocation.input || toolInvocation.args, null, 2)}
+                              </pre> */}
+                            </div>
+                          );
+                        }
+                        return null;
+                      })}
                     </div>
                   </div>
                 </div>
@@ -146,7 +237,11 @@ export default function AIChatSidebar({ className }: AIChatSidebarProps) {
           // The AI response is rendered as chat output; it should not directly edit content here.
           handleSubmit(e, {
             data: editor ? {
-              pageContent: JSON.stringify(editor.document)
+              pageContent: JSON.stringify(editor.document.map((b: any) => ({
+                id: b.id,
+                type: b.type,
+                content: b.content
+              })))
             } : undefined
           });
         }} className="flex items-center gap-2">

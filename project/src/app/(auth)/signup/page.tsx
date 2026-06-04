@@ -11,10 +11,9 @@ import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Field, FieldError, FieldGroup } from '@/components/ui/field';
 
-import Logo from '../../../../public/space.svg';
+import { Sparkles, MailCheck } from 'lucide-react';
 import Loader from '@/components/global/loader';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { MailCheck } from 'lucide-react';
 import { actionSignUpUser } from '@/lib/server-actions/auth-actions';
 
 const SignUpFormSchema = z
@@ -91,17 +90,12 @@ const SignupForm = () => {
       justify-left
       items-center"
             >
-                <Image
-                    src={Logo}
-                    alt="cypress Logo"
-                    width={50}
-                    height={50}
-                />
+                <Sparkles className="w-12 h-12 text-primary" />
                 <span
                     className="font-semibold
       dark:text-white text-4xl first-letter:ml-2"
                 >
-                    cypress.
+                    Space.
                 </span>
             </Link>
             <div

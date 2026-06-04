@@ -14,7 +14,7 @@ const SidebarToggleContext = createContext<SidebarToggleContextType>({
 export const SidebarToggleProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   return (
     <SidebarToggleContext.Provider value={{ sidebarOpen, setSidebarOpen }}>
       {children}

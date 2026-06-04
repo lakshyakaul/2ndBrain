@@ -3,7 +3,7 @@ import { validate } from 'uuid';
 import { users } from '../../../migrations/schema';
 import db from './db';
 import { Subscription, User, Workspace, Page } from './supabase.types';
-import { and, eq, ilike, notExists } from 'drizzle-orm';
+import { and, eq, ilike, notExists, inArray } from 'drizzle-orm';
 import { collaborators, pages, workspaces } from './schema';
 import { revalidatePath } from 'next/cache';
 
@@ -291,6 +291,27 @@ export const updatePage = async (page: Partial<Page>, pageId: string) => {
             .update(pages)
             .set(page)
             .where(eq(pages.id, pageId));
+
+        if ('inTrash' in page) {
+            const getDescendantPageIds = async (id: string): Promise<string[]> => {
+                const children = await db.select().from(pages).where(eq(pages.parentId, id));
+                let ids = children.map(c => c.id);
+                for (const child of children) {
+                    const subIds = await getDescendantPageIds(child.id);
+                    ids = [...ids, ...subIds];
+                }
+                return ids;
+            };
+
+            const descendantIds = await getDescendantPageIds(pageId);
+            if (descendantIds.length > 0) {
+                await db
+                    .update(pages)
+                    .set({ inTrash: page.inTrash })
+                    .where(inArray(pages.id, descendantIds));
+            }
+        }
+
         return { data: null, error: null };
     } catch (error) {
         console.log(error);

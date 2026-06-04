@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
-import CypressHomeIcon from '../icons/cypressHomeIcon';
+import HomeIcon from '../icons/homeIcon';
 
 interface NativeNavigationProps {
   myWorkspaceId: string;
@@ -25,7 +25,7 @@ const NativeNavigation: React.FC<NativeNavigationProps> = ({
           "
             href={`/dashboard/${myWorkspaceId}`}
           >
-            <CypressHomeIcon />
+            <HomeIcon />
             <span>My Workspace</span>
           </Link>
         </li>

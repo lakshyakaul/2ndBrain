@@ -2,7 +2,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import CypressProfileIcon from '../icons/cypressProfileIcon';
+import ProfileIcon from '../icons/profileIcon';
 import { LogOut, Settings } from 'lucide-react';
 import LogoutButton from '@/components/app-navbar/profile/logout-button';
 import CustomDialogTrigger from '../global/custom-dialog-trigger';
@@ -33,7 +33,7 @@ const UserCardActions: React.FC<UserCardActionsProps> = ({
         <Avatar>
           <AvatarImage src={avatarUrl} />
           <AvatarFallback>
-            <CypressProfileIcon />
+            <ProfileIcon />
           </AvatarFallback>
         </Avatar>
         <div className="flex flex-col">

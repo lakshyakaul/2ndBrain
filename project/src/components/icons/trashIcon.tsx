@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 
-interface CypressTrashIconProps {}
-const CypressTrashIcon: FC<CypressTrashIconProps> = () => {
+interface TrashIconProps {}
+const TrashIcon: FC<TrashIconProps> = () => {
   return (
     <svg
       width="24"
@@ -36,4 +36,4 @@ const CypressTrashIcon: FC<CypressTrashIconProps> = () => {
   );
 };
 
-export default CypressTrashIcon;
+export default TrashIcon;

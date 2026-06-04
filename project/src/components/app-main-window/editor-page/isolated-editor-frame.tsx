@@ -83,8 +83,8 @@ const IsolatedEditorFrame: React.FC<IsolatedEditorFrameProps> = ({
         <EditorControllerContext.Provider value={controller}>
             <div className={twMerge(
                 "isolated-editor-frame-container relative w-full h-full border rounded-xl overflow-hidden shadow-inner bg-background/50 backdrop-blur-md transition-all duration-700",
-                isAIAgentActive 
-                    ? "border-primary/50 shadow-[0_0_15px_rgba(var(--primary),0.3)] ring-1 ring-primary/30" 
+                isAIAgentActive // TEMPORARY: Force animation to run always for editing
+                    ? "border-none rounded-none shadow-[0_0_15px] shadow-primary/30 ring-1 ring-primary/30 animate-pulse"
                     : "border-border/10"
             )}>
                 <UniversalEditor

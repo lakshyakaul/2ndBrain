@@ -8,7 +8,7 @@ import { FormSchema } from "@/lib/types";
 import { Field, FieldError, FieldGroup } from "@/components/ui/field";
 import Link from "next/link";
 import Image from "next/image";
-import Logo from "../../../../public/space.svg";
+import { Sparkles } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Loader from "@/components/global/loader";
@@ -55,7 +55,7 @@ const LoginPage = () => {
           justify-left
           items-center"
 			>
-				<Image src={Logo} alt="App Logo" width={50} height={50} />
+				<Sparkles className="w-12 h-12 text-primary" />
 				<span
 					className="font-semibold
                             dark:text-white 

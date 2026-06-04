@@ -15,11 +15,13 @@ import {
   updatePage,
   updateWorkspace,
   findUser,
+  deletePage,
 } from '@/lib/supabase/queries';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   Tooltip,
   TooltipContent,
@@ -50,10 +52,10 @@ import { toast } from 'sonner';
 import "@blocknote/core/fonts/inter.css";
 import "@blocknote/mantine/style.css";
 import { en } from "@blocknote/core/locales";
-import { 
-  useCreateBlockNote, 
-  FormattingToolbarController, 
-  SuggestionMenuController, 
+import {
+  useCreateBlockNote,
+  FormattingToolbarController,
+  SuggestionMenuController,
   getDefaultReactSlashMenuItems,
   getFormattingToolbarItems
 } from "@blocknote/react";
@@ -61,11 +63,11 @@ import { BlockNoteView } from "@blocknote/mantine";
 import { FormattingToolbar } from "@blocknote/react";
 
 // BlockNote AI imports
-import { 
+import {
   AIExtension,
-  AIMenuController, 
+  AIMenuController,
   AIToolbarButton,
-  getAISlashMenuItems 
+  getAISlashMenuItems
 } from "@blocknote/xl-ai";
 import { en as aiEn } from "@blocknote/xl-ai/locales";
 import { DefaultChatTransport } from "ai";
@@ -90,7 +92,7 @@ const BlockNoteEditorComp: React.FC<BlockNoteEditorProps> = ({
   );
   const { state, workspaceId, dispatch } = useAppState();
   const saveTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
-  const { user } = useSupabaseUser();
+  const { user, subscription } = useSupabaseUser();
   const router = useRouter();
   const { socket } = useSocket();
   const pathname = usePathname();
@@ -106,7 +108,6 @@ const BlockNoteEditorComp: React.FC<BlockNoteEditorProps> = ({
   const [hideTrashBanner, setHideTrashBanner] = useState(false);
   const [optionsOpen, setOptionsOpen] = useState(false);
   const optionsRef = useRef<HTMLDivElement>(null);
-  const subscription = false;
 
   // Close options dropdown on outside click
   useEffect(() => {
@@ -123,8 +124,8 @@ const BlockNoteEditorComp: React.FC<BlockNoteEditorProps> = ({
     dirType === 'workspace'
       ? state.workspaces.find((w) => w.id === fileId) || dirDetails
       : state.workspaces
-          .find((w) => w.id === workspaceId)
-          ?.pages?.find((p) => p.id === fileId) || dirDetails;
+        .find((w) => w.id === workspaceId)
+        ?.pages?.find((p) => p.id === fileId) || dirDetails;
 
   const breadCrumbs = React.useMemo(() => {
     if (!pathname || !state.workspaces || !workspaceId) return;
@@ -234,17 +235,55 @@ const BlockNoteEditorComp: React.FC<BlockNoteEditorProps> = ({
         },
       });
       await updatePage({ inTrash: `Deleted by ${user.email}` }, fileId);
+
+      const parentId = (details as Page).parentId;
+      if (parentId) {
+        router.push(`/dashboard/${workspaceId}/${parentId}`);
+      } else {
+        router.push(`/dashboard/${workspaceId}`);
+      }
     }
+  };
+
+  // Permanently delete a page already in trash
+  const permanentDeleteHandler = async () => {
+    if (dirType !== 'page' || !workspaceId) return;
+    dispatch({
+      type: 'DELETE_PAGE',
+      payload: { pageId: fileId, workspaceId },
+    });
+    await deletePage(fileId);
+    const parentId = (details as Page).parentId;
+    router.push(parentId ? `/dashboard/${workspaceId}/${parentId}` : `/dashboard/${workspaceId}`);
   };
 
   const deleteBanner = async () => {
     if (!fileId) return;
     setDeletingBanner(true);
-    const response = await supabase.storage
-      .from('file-banners')
-      .remove([`banner-${fileId}`]);
-    if (!response.error) {
+    if (details?.bannerUrl) {
+      await supabase.storage
+        .from('file-banners')
+        .remove([details.bannerUrl]);
+    }
+    if (dirType === 'page') {
       await updatePage({ bannerUrl: '' }, fileId);
+      dispatch({
+        type: 'UPDATE_PAGE',
+        payload: {
+          page: { bannerUrl: '' },
+          pageId: fileId,
+          workspaceId,
+        },
+      });
+    } else if (dirType === 'workspace') {
+      await updateWorkspace({ bannerUrl: '' }, fileId);
+      dispatch({
+        type: 'UPDATE_WORKSPACE',
+        payload: {
+          workspace: { bannerUrl: '' },
+          workspaceId,
+        },
+      });
     }
     setDeletingBanner(false);
   };
@@ -427,7 +466,7 @@ const BlockNoteEditorComp: React.FC<BlockNoteEditorProps> = ({
           email: user.email?.split('@')[0],
           avatarUrl: response.avatarUrl
             ? supabase.storage.from('avatars').getPublicUrl(response.avatarUrl)
-                .data.publicUrl
+              .data.publicUrl
             : '',
         });
       });
@@ -444,7 +483,7 @@ const BlockNoteEditorComp: React.FC<BlockNoteEditorProps> = ({
     const yProvider = new SupabaseProvider(`blocknote-${fileId}`, yDoc, supabase, {
       awareness: true,
     });
-    
+
     // BlockNote expects the provider to have a public `awareness` property.
     // SupabaseProvider uses a private property and a getter, so we explicitly expose it.
     (yProvider as any).awareness = yProvider.getAwareness();
@@ -459,9 +498,36 @@ const BlockNoteEditorComp: React.FC<BlockNoteEditorProps> = ({
     };
   }, [doc, provider]);
 
+  // Custom file upload handler for BlockNote images and media
+  const uploadFile = async (file: File): Promise<string> => {
+    const uniqueId = Date.now();
+    const { data, error } = await supabase.storage
+      .from('file-banners')
+      .upload(`media-${fileId}-${uniqueId}-${file.name}`, file, {
+        cacheControl: '3600',
+        upsert: true,
+      });
+    if (error) {
+      console.error("Upload error", error);
+      throw error;
+    }
+    return supabase.storage.from('file-banners').getPublicUrl(data.path).data.publicUrl;
+  };
+
+  const { setYDoc, setYProvider, setEditor, setIsAIAgentActive } = useActiveEditor();
+
+  const aiTransport = useMemo(() => {
+    if (typeof window === 'undefined') return undefined;
+    // Create the default transport targeting our fixed API route
+    return new DefaultChatTransport({
+      api: '/api/ai/chat',
+    });
+  }, []);
+
   // Initialize BlockNote
   const editor = useCreateBlockNote({
     initialContent,
+    uploadFile,
     dictionary: {
       ...en,
       ai: aiEn,
@@ -474,16 +540,12 @@ const BlockNoteEditorComp: React.FC<BlockNoteEditorProps> = ({
         color: '#3b82f6',
       },
     } : undefined,
-    extensions: [
+    extensions: aiTransport ? [
       AIExtension({
-        transport: new DefaultChatTransport({
-          api: '/api/ai/chat', // Call Vercel AI route
-        }),
+        transport: aiTransport,
       }),
-    ],
+    ] : [],
   });
-
-  const { setYDoc, setYProvider, setEditor } = useActiveEditor();
 
   useEffect(() => {
     setYDoc(doc || null);
@@ -497,29 +559,38 @@ const BlockNoteEditorComp: React.FC<BlockNoteEditorProps> = ({
   }, [doc, provider, editor, setYDoc, setYProvider, setEditor]);
 
   useEffect(() => {
-    if (!editor || !initialContent || typeof initialContent !== 'string') return;
+    if (!editor || !initialContent) return;
     try {
-      const parsed = JSON.parse(initialContent);
-      if (parsed && parsed.length > 0 && editor.document.length === 1 && !editor.document[0].content) {
+      // initialContent is already parsed in fetchInformation, so it's likely an array of blocks.
+      // If for some reason it's a string, we parse it, otherwise use it directly.
+      const parsed = typeof initialContent === 'string' ? JSON.parse(initialContent) : initialContent;
+
+      // Check if the editor is currently completely empty
+      // BlockNote initializes with a single paragraph block. Its content is usually an empty array.
+      const isEditorEmpty =
+        editor.document.length === 1 &&
+        (!editor.document[0].content || (Array.isArray(editor.document[0].content) && editor.document[0].content.length === 0));
+
+      if (parsed && Array.isArray(parsed) && parsed.length > 0 && isEditorEmpty) {
         editor.replaceBlocks(editor.document, parsed);
       }
     } catch (e) {
-      console.error("Failed to parse initial content", e);
+      console.error("Failed to load initial content into editor", e);
     }
   }, [editor, initialContent]);
 
   useEffect(() => {
-    if (!doc || !editor) return;
-    
+    if (!editor) return;
+
     const handleDocUpdate = () => {
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
       setSaving(true);
-      
+
       saveTimerRef.current = setTimeout(async () => {
         try {
           const jsonBlocks = editor.document;
           const contentString = JSON.stringify(jsonBlocks);
-          
+
           if (dirType === 'workspace') {
             dispatch({
               type: 'UPDATE_WORKSPACE',
@@ -549,17 +620,17 @@ const BlockNoteEditorComp: React.FC<BlockNoteEditorProps> = ({
       }, 1000);
     };
 
-    doc.on('update', handleDocUpdate);
-    return () => doc.off('update', handleDocUpdate);
-  }, [doc, editor, fileId, dirType, workspaceId, dispatch]);
+    const unsubscribe = editor.onChange(handleDocUpdate);
+    return () => unsubscribe();
+  }, [editor, fileId, dirType, workspaceId, dispatch]);
 
   return (
     <div className="flex flex-col w-full min-h-full bg-background">
       {/* Main Container Area */}
       <div className="flex-1 flex flex-col w-full max-w-4xl mx-auto px-8 py-6">
-        
+
         {/* Main Container Header: Breadcrumbs & Options Menu */}
-        <div className="flex items-center justify-between border-b border-border/40 pb-4 mb-8">
+        <div className="flex items-center justify-between border-b border-border/40 pb-4 mb-4">
           <div className="flex items-center text-sm font-medium text-muted-foreground">
             {breadCrumbs}
           </div>
@@ -660,7 +731,7 @@ const BlockNoteEditorComp: React.FC<BlockNoteEditorProps> = ({
             <Button size="sm" variant="outline" className="bg-transparent border-white text-white hover:bg-white hover:text-red-600" onClick={restoreFileHandler}>
               Restore
             </Button>
-            <Button size="sm" variant="outline" className="bg-transparent border-white text-white hover:bg-white hover:text-red-600" onClick={deleteFileHandler}>
+            <Button size="sm" variant="outline" className="bg-transparent border-white text-white hover:bg-white hover:text-red-600" onClick={permanentDeleteHandler}>
               Delete
             </Button>
           </article>
@@ -685,7 +756,7 @@ const BlockNoteEditorComp: React.FC<BlockNoteEditorProps> = ({
             value={details.title || ''}
             onChange={titleChange}
             onBlur={titleBlur}
-            className="text-foreground text-4xl font-extrabold outline-none bg-transparent mb-4 tracking-tight"
+            className="text-foreground text-4xl font-extrabold outline-none bg-transparent mb-4 tracking-tight leading-none"
             placeholder="Untitled"
           />
           <div className="flex items-center gap-3 mb-8">
@@ -711,35 +782,31 @@ const BlockNoteEditorComp: React.FC<BlockNoteEditorProps> = ({
 
           {/* Universal Editor Canvas centered */}
           <div id="container" className="w-full min-h-[500px]" style={{ overflow: 'visible' }}>
-            {loading ? (
-              <div className="flex items-center justify-center min-h-[300px]">
-                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
-              </div>
-            ) : (
-              <BlockNoteView 
-                editor={editor} 
+            {loading ? null : (
+              <BlockNoteView
+                editor={editor}
                 theme={theme === 'dark' ? 'dark' : 'light'}
                 formattingToolbar={false}
                 slashMenu={false}
-                className="w-full h-full min-h-[400px]"
+                className="w-full h-full min-h-[400px] animate-in fade-in slide-in-from-top-12 duration-700 ease-out"
               >
                 <AIMenuController />
-                <FormattingToolbarController 
+                <FormattingToolbarController
                   formattingToolbar={() => (
                     <FormattingToolbar>
                       {getFormattingToolbarItems()}
                       <AIToolbarButton key={"aiToolbarButton"} />
                     </FormattingToolbar>
-                  )} 
+                  )}
                 />
-                <SuggestionMenuController 
-                  triggerCharacter="/" 
-                  getItems={async (query) => 
+                <SuggestionMenuController
+                  triggerCharacter="/"
+                  getItems={async (query) =>
                     [
                       ...getDefaultReactSlashMenuItems(editor),
                       ...getAISlashMenuItems(editor)
                     ].filter(i => i.title.toLowerCase().includes(query.toLowerCase()))
-                  } 
+                  }
                 />
               </BlockNoteView>
             )}

@@ -33,7 +33,7 @@ const Header = () => {
 			className={cn(
 				"fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 py-4 flex items-center justify-between border-b",
 				scrolled
-					? "bg-background/80 dark:bg-background/40 backdrop-blur-xl border-border/40 shadow-sm"
+					? "bg-background/90 dark:bg-background/40 backdrop-blur-xl border-border/60 shadow-sm"
 					: "bg-transparent border-transparent"
 			)}
 		>
@@ -49,7 +49,7 @@ const Header = () => {
 			</Link>
 
 			{/* Desktop Navigation */}
-			<nav className="hidden md:flex items-center gap-20  border border-black/20 dark:border-border/30 px-4 py-1.5 rounded-full backdrop-blur-md">
+			<nav className="hidden md:flex items-center gap-20 border border-border/60 bg-background/70 px-4 py-1.5 rounded-full backdrop-blur-md">
 				{routes.map((route) => (
 					<Link
 						key={route.title}
@@ -85,7 +85,7 @@ const Header = () => {
 			{/* Mobile Menu Toggle */}
 			<button
 				onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-				className="flex md:hidden p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 border border-transparent hover:border-border/30 transition-all"
+				className="flex md:hidden p-2 rounded-lg hover:bg-muted/60 dark:hover:bg-white/10 border border-transparent hover:border-border/30 transition-all"
 				aria-label="Toggle Menu"
 			>
 				{mobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}

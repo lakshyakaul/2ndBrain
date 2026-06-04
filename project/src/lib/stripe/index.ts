@@ -7,7 +7,7 @@ const key = process.env.STRIPE_SECRET_KEY || 'sk_placeholder_for_build';
 export const stripe = new Stripe(key, {
   apiVersion: '2026-04-22.dahlia',
   appInfo: {
-    name: 'Webprodigies Cypress',
+    name: 'Space App',
     version: '0.1.0',
   },
 });

@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 
-interface CypressHomeIconProps {}
-const CypressHomeIcon: FC<CypressHomeIconProps> = () => {
+interface HomeIconProps {}
+const HomeIcon: FC<HomeIconProps> = () => {
   return (
     <svg
       width="24"
@@ -24,4 +24,4 @@ const CypressHomeIcon: FC<CypressHomeIconProps> = () => {
   );
 };
 
-export default CypressHomeIcon;
+export default HomeIcon;

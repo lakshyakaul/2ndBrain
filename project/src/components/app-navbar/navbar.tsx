@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Sparkles, User, Home, Trash2 } from 'lucide-react';
 import { useSidebarToggle } from '@/lib/providers/sidebar-toggle-provider';
 import ModeToggle from './theme/mode-toggle';
@@ -14,7 +14,11 @@ import {
 import LogoutButton from "./profile/logout-button";
 import CustomDialogTrigger from "@/components/global/custom-dialog-trigger";
 import UserSettingsForm from "@/components/settings/user-settings-form";
-
+import Link from "next/link";
+import TrashRestore from "@/components/trash/trash-restore";
+import { useSupabaseUser } from '@/lib/providers/supabase-user-provider';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { createBrowserClient } from '@supabase/ssr';
 
 interface GlobalTopbarProps {
   breadCrumbs?: React.ReactNode;
@@ -24,10 +28,28 @@ interface GlobalTopbarProps {
 
 const GlobalTopbar: React.FC<GlobalTopbarProps> = ({ breadCrumbs, children, hideSidebarButton }) => {
   const { sidebarOpen, setSidebarOpen } = useSidebarToggle();
+  const { user } = useSupabaseUser();
+  const [avatarUrl, setAvatarUrl] = useState('');
+
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+
+  useEffect(() => {
+    if (!user?.id) return;
+    const fetchAvatar = async () => {
+      const { data } = await supabase.from('users').select('avatar_url').eq('id', user.id).single();
+      if (data?.avatar_url) {
+        setAvatarUrl(supabase.storage.from('avatars').getPublicUrl(data.avatar_url).data.publicUrl);
+      }
+    };
+    fetchAvatar();
+  }, [user]);
 
   return (
     <div className="w-full shrink-0 h-14 border-b border-border/50 dark:border-border bg-background flex items-center justify-between px-6">
-      {/* Left side: Toggle button and app branding "Space" */}
+      {/* Left side */}
       <div className="flex items-center gap-4">
         {!hideSidebarButton && (
           <button
@@ -44,16 +66,18 @@ const GlobalTopbar: React.FC<GlobalTopbarProps> = ({ breadCrumbs, children, hide
 
         {/* Global Navigation Shortcuts */}
         <div className="flex items-center gap-1 border-l border-border/50 pl-4">
-          <button className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-all">
+          <Link href="/dashboard" className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-all">
             <Home size={16} />
             Home
-          </button>
-          <button className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-all">
-            <Trash2 size={16} />
-            Trash
-          </button>
+          </Link>
+          <CustomDialogTrigger header="Trash" content={<TrashRestore />}>
+            <button className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-all">
+              <Trash2 size={16} />
+              Trash
+            </button>
+          </CustomDialogTrigger>
         </div>
-        
+
         {/* Breadcrumbs */}
         {breadCrumbs && (
           <div className="flex items-center text-sm font-medium text-muted-foreground border-l border-border/50 pl-4 ml-2">
@@ -62,35 +86,34 @@ const GlobalTopbar: React.FC<GlobalTopbarProps> = ({ breadCrumbs, children, hide
         )}
       </div>
 
-      {/* Right side: Children, Dark Mode (Moon), AI agents (Robot), User profile (Avatar) */}
+      {/* Right side */}
       <div className="flex items-center gap-4">
         {children}
         <ModeToggle />
 
-
-
-        {/* User Profile (Avatar/User) dropdown */}
+        {/* User Profile dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
-              className="p-2 outline-none rounded-full hover:bg-muted text-muted-foreground hover:text-foreground transition-all border border-border/50"
+              className="outline-none rounded-full hover:ring-2 hover:ring-primary/30 transition-all"
               title="User Profile"
             >
-              <User size={20} />
+              <Avatar className="h-8 w-8 border border-border/50">
+                <AvatarImage src={avatarUrl} />
+                <AvatarFallback className="bg-muted">
+                  <User size={16} className="text-muted-foreground" />
+                </AvatarFallback>
+              </Avatar>
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-[200px]">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View Profile</DropdownMenuItem>
-
             <CustomDialogTrigger header="Account Settings" content={<UserSettingsForm />}>
               <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="w-full cursor-pointer">
                 Account Settings
               </DropdownMenuItem>
             </CustomDialogTrigger>
-
-            <DropdownMenuItem>Switch Accounts</DropdownMenuItem>
             <DropdownMenuSeparator />
             <LogoutButton>
               <DropdownMenuItem className="w-full cursor-pointer text-destructive">

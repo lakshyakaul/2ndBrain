@@ -52,7 +52,7 @@ const BannerUploadForm: React.FC<BannerUploadFormProps> = ({ dirType, id }) => {
         const details = dirType === 'page'
           ? state.workspaces.find(w => w.id === workspaceId)?.pages.find(p => p.id === id)
           : state.workspaces.find(w => w.id === id);
-        
+
         if (details?.bannerUrl) {
           await supabase.storage.from('file-banners').remove([details.bannerUrl]);
         }

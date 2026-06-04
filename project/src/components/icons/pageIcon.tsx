@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 
-interface CypressPageIconProps {}
-const CypressPageIcon: FC<CypressPageIconProps> = () => {
+interface PageIconProps {}
+const PageIcon: FC<PageIconProps> = () => {
   return (
     <svg
       width="24"
@@ -34,4 +34,4 @@ const CypressPageIcon: FC<CypressPageIconProps> = () => {
   );
 };
 
-export default CypressPageIcon;
+export default PageIcon;

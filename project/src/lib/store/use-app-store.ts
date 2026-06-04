@@ -85,29 +85,51 @@ export const useAppStore = create<AppState>((set) => ({
 
     updatePage: (workspaceId, pageId, updatedPage) =>
         set((state) => ({
-            workspaces: state.workspaces.map((w) =>
-                w.id === workspaceId
-                    ? {
-                          ...w,
-                          pages: (w.pages || []).map((p) =>
-                              p.id === pageId ? { ...p, ...updatedPage } : p
-                          ),
-                      }
-                    : w
-            ),
+            workspaces: state.workspaces.map((w) => {
+                if (w.id !== workspaceId) return w;
+
+                const pages = w.pages || [];
+                const updatedPages = [...pages];
+
+                const applyUpdateRecursively = (id: string, updates: Partial<Page>) => {
+                    const idx = updatedPages.findIndex(p => p.id === id);
+                    if (idx !== -1) {
+                        updatedPages[idx] = { ...updatedPages[idx], ...updates };
+                    }
+                    if ('inTrash' in updates) {
+                        const children = pages.filter(p => p.parentId === id);
+                        children.forEach(child => {
+                            applyUpdateRecursively(child.id, { inTrash: updates.inTrash });
+                        });
+                    }
+                };
+
+                applyUpdateRecursively(pageId, updatedPage);
+
+                return {
+                    ...w,
+                    pages: updatedPages,
+                };
+            }),
         })),
 
     deletePage: (workspaceId, pageId) =>
-        set((state) => ({
-            workspaces: state.workspaces.map((w) =>
-                w.id === workspaceId
-                    ? {
-                          ...w,
-                          pages: (w.pages || []).filter((p) => p.id !== pageId),
-                      }
-                    : w
-            ),
-        })),
+        set((state) => {
+            const findDescendants = (pages: Page[], parentId: string): string[] => {
+                const childIds = pages.filter(p => p.parentId === parentId).map(p => p.id);
+                return [parentId, ...childIds.flatMap(id => findDescendants(pages, id))];
+            };
+            return {
+                workspaces: state.workspaces.map((w) => {
+                    if (w.id !== workspaceId) return w;
+                    const idsToRemove = findDescendants(w.pages || [], pageId);
+                    return {
+                        ...w,
+                        pages: (w.pages || []).filter((p) => !idsToRemove.includes(p.id)),
+                    };
+                }),
+            };
+        }),
 
     setActiveWorkspaceId: (id) => set({ activeWorkspaceId: id }),
     setActivePageId: (id) => set({ activePageId: id }),

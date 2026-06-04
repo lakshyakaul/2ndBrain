@@ -20,7 +20,7 @@ const TreeNode: React.FC<{
   level: number;
   onDropNode: (draggedId: string, targetId: string | null) => void;
 }> = ({ node, pages, level, onDropNode }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
   const [isDragOver, setIsDragOver] = useState(false);
 
   const children = pages.filter((p) => p.parentId === node.id);
@@ -153,9 +153,10 @@ const TreeView: React.FC<TreeViewProps> = ({ workspaceId }) => {
     );
   }
 
-  const rootPages = pages.filter((p) => !p.parentId);
+  const activePages = pages.filter((p) => !p.inTrash);
+  const rootPages = activePages.filter((p) => !p.parentId);
 
-  if (pages.length === 0) {
+  if (activePages.length === 0) {
     return (
       <div className="flex w-full h-full items-center justify-center text-sm text-muted-foreground italic bg-muted/10 rounded-md border-2 border-dashed">
         No pages in this workspace yet.
@@ -182,7 +183,7 @@ const TreeView: React.FC<TreeViewProps> = ({ workspaceId }) => {
         }}
       >
         {rootPages.map((page) => (
-          <TreeNode key={page.id} node={page} pages={pages} level={0} onDropNode={handleDropNode} />
+          <TreeNode key={page.id} node={page} pages={activePages} level={0} onDropNode={handleDropNode} />
         ))}
       </div>
     </ScrollArea>

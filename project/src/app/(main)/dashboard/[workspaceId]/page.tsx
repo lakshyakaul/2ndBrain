@@ -9,9 +9,9 @@ const Workspace = async ({ params }: { params: Promise<{ workspaceId: string }> 
     const { data, error } = await getWorkspaceDetails(workspaceId);
     if (error || !data.length) redirect('/dashboard');
     return (
-        <div className="relative h-full w-full">
-            <WorkspaceOverview workspace={data[0]} />
-        </div>
+    <div className="relative h-full w-full overflow-hidden">
+        <WorkspaceOverview workspace={data[0]} />
+    </div>
     );
 };
 

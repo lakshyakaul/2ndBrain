@@ -1,5 +1,6 @@
 import { google } from '@ai-sdk/google';
-import { streamText, convertToModelMessages } from 'ai';
+import { streamText, convertToModelMessages, zodSchema } from 'ai';
+import { z } from 'zod';
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -12,6 +13,7 @@ export async function POST(req: Request) {
     console.log('[AI Workflow Step 2] /api/ai/sidebar-chat received POST request.');
     console.log('[AI Workflow Step 2b] Messages count:', messages?.length);
     console.log('[AI Workflow Step 2c] Context data attached:', !!data);
+    console.log('[AI Workflow DEBUG] Incoming messages payload:', JSON.stringify(messages, null, 2));
 
     // The route only converts chat messages into model messages and streams the assistant reply.
     // It must not modify editor content or mutate the incoming payload, because the sidebar is
@@ -23,8 +25,37 @@ export async function POST(req: Request) {
 
     const result = await streamText({
       model: google('gemini-2.5-flash'),
-      system: system_prompt || "You are a helpful AI assistant inside a workspace editor. You can help the user write, edit, and organize their content.",
+      system: system_prompt || "You are a helpful AI assistant inside a workspace editor. You can help the user write, edit, and organize their content. You have tools available to directly manipulate the document based on the user's request. Always use tools to modify the document when asked.",
       messages: await convertToModelMessages(messages),
+      tools: {
+        insertBlock: {
+          description: 'Insert a new text block into the editor document.',
+          inputSchema: zodSchema(z.object({
+            text: z.string().describe('The markdown or plain text content to insert.'),
+            placement: z.enum(['start', 'end', 'after']).describe('Where to insert the block. Use "after" if you have a specific reference block ID.'),
+            referenceBlockId: z.string().optional().describe('The ID of the block to insert after (required if placement is "after").')
+          })),
+        },
+        updateBlock: {
+          description: 'Update the content of an existing block.',
+          inputSchema: zodSchema(z.object({
+            id: z.string().describe('The ID of the block to update.'),
+            text: z.string().describe('The new markdown or plain text content for the block.')
+          })),
+        },
+        deleteBlock: {
+          description: 'Delete a specific block from the document.',
+          inputSchema: zodSchema(z.object({
+            id: z.string().describe('The ID of the block to delete.')
+          })),
+        },
+        replaceDocument: {
+          description: 'Replace the entire document with new content. Use carefully for full rewrites.',
+          inputSchema: zodSchema(z.object({
+            content: z.string().describe('The full new document content in markdown format.')
+          })),
+        }
+      }
     });
 
     console.log('[AI Workflow Step 3] Stream established with LLM api provider.');
