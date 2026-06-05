@@ -99,15 +99,7 @@ const CollaboratorSearch: React.FC<CollaboratorSearchProps> = ({
                     <AvatarImage src="/avatars/7.png" />
                     <AvatarFallback>CP</AvatarFallback>
                   </Avatar>
-                  <div
-                    className="text-sm 
-                  gap-2 
-                  overflow-hidden 
-                  overflow-ellipsis 
-                  w-[180px] 
-                  text-muted-foreground
-                  "
-                  >
+                  <div className="text-sm gap-2 overflow-hidden w-[180px] text-muted-foreground">
                     {user.email}
                   </div>
                 </div>

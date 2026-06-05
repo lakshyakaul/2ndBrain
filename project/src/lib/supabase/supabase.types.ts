@@ -37,9 +37,7 @@ export type Database = {
         Row: {
           banner_url: string | null
           created_at: string
-          novel_data: string | null
           blocknote_data: string | null
-          quill_data: string | null
           icon_id: string
           id: string
           in_trash: string | null
@@ -51,9 +49,7 @@ export type Database = {
         Insert: {
           banner_url?: string | null
           created_at?: string
-          novel_data?: string | null
           blocknote_data?: string | null
-          quill_data?: string | null
           icon_id: string
           id?: string
           in_trash?: string | null
@@ -65,9 +61,7 @@ export type Database = {
         Update: {
           banner_url?: string | null
           created_at?: string
-          novel_data?: string | null
           blocknote_data?: string | null
-          quill_data?: string | null
           icon_id?: string
           id?: string
           in_trash?: string | null
@@ -266,9 +260,7 @@ export type Database = {
         Row: {
           banner_url: string | null
           created_at: string
-          novel_data: string | null
           blocknote_data: string | null
-          quill_data: string | null
           id: string
           in_trash: string | null
           title: string
@@ -279,9 +271,7 @@ export type Database = {
         Insert: {
           banner_url?: string | null
           created_at?: string
-          novel_data?: string | null
           blocknote_data?: string | null
-          quill_data?: string | null
           id?: string
           in_trash?: string | null
           title: string
@@ -292,9 +282,7 @@ export type Database = {
         Update: {
           banner_url?: string | null
           created_at?: string
-          novel_data?: string | null
           blocknote_data?: string | null
-          quill_data?: string | null
           id?: string
           in_trash?: string | null
           title?: string

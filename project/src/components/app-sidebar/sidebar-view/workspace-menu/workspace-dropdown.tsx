@@ -8,6 +8,7 @@ import WorkspaceCreator from './workspace-creator';
 import { ArrowLeftRight, Plus } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { usePathname } from 'next/navigation';
+import { cn, sidebarNavItemClass } from '@/lib/utils';
 
 interface WorkspaceDropdownProps {
     privateWorkspaces: Workspace[] | [];
@@ -72,7 +73,7 @@ const WorkspaceDropdown: React.FC<WorkspaceDropdownProps> = ({
                             content={<WorkspaceCreator />}
                             description="Workspaces give you the power to collaborate with others. You can change your workspace privacy settings after creating the workspace too."
                         >
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors px-2 py-1.5 rounded-md cursor-pointer mt-1 w-full text-left">
+                            <div className={cn(sidebarNavItemClass, "cursor-pointer mt-1 w-full text-left")}>
                                 <Plus size={14} className="shrink-0 opacity-70" />
                                 <span>Create workspace</span>
                             </div>

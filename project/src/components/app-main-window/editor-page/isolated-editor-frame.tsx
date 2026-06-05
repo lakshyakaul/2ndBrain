@@ -2,7 +2,8 @@
 
 import React, { createContext, useContext, useEffect, useRef } from 'react';
 import * as Y from 'yjs';
-import UniversalEditor from './universal-editor';
+import dynamic from 'next/dynamic';
+const BlockNoteEditorComp = dynamic(() => import('./blocknote-editor'), { ssr: false });
 import { Page, workspace } from '@/lib/supabase/supabase.types';
 import { useActiveEditor } from '@/lib/providers/active-editor-provider';
 import { twMerge } from 'tailwind-merge';
@@ -87,7 +88,7 @@ const IsolatedEditorFrame: React.FC<IsolatedEditorFrameProps> = ({
                     ? "border-none rounded-none shadow-[0_0_15px] shadow-primary/30 ring-1 ring-primary/30 animate-pulse"
                     : "border-border/10"
             )}>
-                <UniversalEditor
+                <BlockNoteEditorComp
                     dirDetails={dirDetails}
                     fileId={fileId}
                     dirType={dirType}

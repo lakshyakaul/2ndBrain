@@ -25,6 +25,25 @@ import Cal from "../../../public/cal.png";
 import Diamond from "../../../public/icons/diamond.svg";
 import CheckIcon from "../../../public/icons/check.svg";
 
+const badgeColors = {
+  purple: "border-brand-primary-purple/30 bg-brand-primary-purple/5 text-brand-primary-purple",
+  blue: "border-brand-primary-blue/30 bg-brand-primary-blue/5 text-brand-primary-blue",
+};
+
+const SectionHeader = ({ badgeText, title, description, badgeColor = "purple" }: { badgeText: string, title: React.ReactNode, description: React.ReactNode, badgeColor?: keyof typeof badgeColors }) => (
+  <div className="text-center flex flex-col items-center mb-16">
+    <div className={cn("px-3.5 py-1 rounded-full border text-xs font-semibold uppercase tracking-wider mb-4", badgeColors[badgeColor])}>
+      {badgeText}
+    </div>
+    <h2 className="text-3xl sm:text-5xl font-bold tracking-tight mb-4 max-w-2xl leading-tight">
+      {title}
+    </h2>
+    <p className="text-muted-foreground max-w-lg">
+      {description}
+    </p>
+  </div>
+);
+
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden pt-24 font-dm-sans">
@@ -208,17 +227,12 @@ export default function HomePage() {
         <div className="absolute top-[20%] left-1/2 -translate-x-1/2 w-[50%] h-[30%] bg-brand-primary-purple/5 blur-[120px] -z-10 pointer-events-none" />
 
         {/* Header */}
-        <div className="text-center flex flex-col items-center mb-16">
-          <div className="px-3.5 py-1 rounded-full border border-brand-primary-purple/30 bg-brand-primary-purple/5 text-xs font-semibold text-brand-primary-purple uppercase tracking-wider mb-4">
-            Features
-          </div>
-          <h2 className="text-3xl sm:text-5xl font-bold tracking-tight mb-4 max-w-2xl leading-tight">
-            Keep track of your projects &amp; workflows all in one place
-          </h2>
-          <p className="text-muted-foreground max-w-lg">
-            Bring ideas to life inside high-fidelity shared spaces. Collaborate in real-time, schedule tasks, and check granular history effortlessly.
-          </p>
-        </div>
+        <SectionHeader
+          badgeText="Features"
+          title="Keep track of your projects & workflows all in one place"
+          description="Bring ideas to life inside high-fidelity shared spaces. Collaborate in real-time, schedule tasks, and check granular history effortlessly."
+          badgeColor="purple"
+        />
 
         {/* Bento Grid layout */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
@@ -324,17 +338,12 @@ export default function HomePage() {
         <div className="absolute top-[40%] left-0 w-80 h-80 rounded-full bg-brand-primary-blue/5 blur-[90px] pointer-events-none" />
         <div className="absolute bottom-[20%] right-0 w-80 h-80 rounded-full bg-brand-primary-purple/5 blur-[90px] pointer-events-none" />
 
-        <div className="max-w-6xl mx-auto px-6 text-center flex flex-col items-center mb-16">
-          <div className="px-3.5 py-1 rounded-full border border-brand-primary-blue/30 bg-brand-primary-blue/5 text-xs font-semibold text-brand-primary-blue uppercase tracking-wider mb-4">
-            Testimonials
-          </div>
-          <h2 className="text-3xl sm:text-5xl font-bold tracking-tight mb-4 max-w-2xl leading-tight">
-            Trusted by thousands of modern builders
-          </h2>
-          <p className="text-muted-foreground max-w-lg">
-            See how fast-growing product teams and creators use Space to keep their workspaces in perfect alignment.
-          </p>
-        </div>
+        <SectionHeader
+          badgeText="Testimonials"
+          title="Trusted by thousands of modern builders"
+          description="See how fast-growing product teams and creators use Space to keep their workspaces in perfect alignment."
+          badgeColor="blue"
+        />
 
         {/* Stationary High-Fidelity Responsive Grid */}
         <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -372,17 +381,12 @@ export default function HomePage() {
       <section id="pricing" className="px-6 py-24 max-w-5xl mx-auto relative">
         <div className="absolute top-[20%] left-1/2 -translate-x-1/2 w-[60%] h-[40%] bg-brand-primary-blue/5 blur-[120px] -z-10 pointer-events-none" />
 
-        <div className="text-center flex flex-col items-center mb-16">
-          <div className="px-3.5 py-1 rounded-full border border-brand-primary-blue/30 bg-brand-primary-blue/5 text-xs font-semibold text-brand-primary-blue uppercase tracking-wider mb-4">
-            Pricing
-          </div>
-          <h2 className="text-3xl sm:text-5xl font-bold tracking-tight mb-4 max-w-2xl leading-tight">
-            The Perfect Plan For You
-          </h2>
-          <p className="text-muted-foreground max-w-md">
-            Select a plan that suits your team size and productivity speed. Upgrade, downgrade, or cancel anytime.
-          </p>
-        </div>
+        <SectionHeader
+          badgeText="Pricing"
+          title="The Perfect Plan For You"
+          description="Select a plan that suits your team size and productivity speed. Upgrade, downgrade, or cancel anytime."
+          badgeColor="blue"
+        />
 
         {/* Pricing card comparison list */}
         <div className="flex flex-col md:flex-row items-stretch justify-center gap-8 mt-12 max-w-3xl mx-auto">
@@ -482,24 +486,7 @@ export default function HomePage() {
 
       {/* BOTTOM RADIAL GLOW */}
       <div className="relative w-full h-[300px] pointer-events-none overflow-hidden mt-[-250px]">
-        <div className="
-					absolute
-					bottom-[-120px]
-					left-1/2
-					-translate-x-1/2
-					w-[180%]
-					h-[220px]
-					rounded-full
-					opacity-90
-
-					bg-gradient-to-t
-					from-brand-primary-blue/90
-					via-brand-primary-purple/60
-					to-transparent
-				
-					blur-3xl
-					pointer-events-none
-					" />
+        <div className="absolute bottom-[-120px] left-1/2 -translate-x-1/2 w-[180%] h-[220px] rounded-full opacity-90 bg-gradient-to-t from-brand-primary-blue/90 via-brand-primary-purple/60 to-transparent blur-3xl pointer-events-none" />
       </div>
     </div>
   );

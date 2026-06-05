@@ -97,9 +97,7 @@ export const getPrivateWorkspaces = async (userId: string) => {
             createdAt: workspaces.createdAt,
             workspaceOwner: workspaces.workspaceOwner,
             title: workspaces.title,
-            novelData: workspaces.novelData,
             blocknoteData: workspaces.blocknoteData,
-            quillData: workspaces.quillData,
             inTrash: workspaces.inTrash,
             bannerUrl: workspaces.bannerUrl,
         })
@@ -126,9 +124,7 @@ export const getCollaboratingWorkspaces = async (userId: string) => {
             createdAt: workspaces.createdAt,
             workspaceOwner: workspaces.workspaceOwner,
             title: workspaces.title,
-            novelData: workspaces.novelData,
             blocknoteData: workspaces.blocknoteData,
-            quillData: workspaces.quillData,
             inTrash: workspaces.inTrash,
             bannerUrl: workspaces.bannerUrl,
         })
@@ -147,9 +143,7 @@ export const getSharedWorkspaces = async (userId: string) => {
             createdAt: workspaces.createdAt,
             workspaceOwner: workspaces.workspaceOwner,
             title: workspaces.title,
-            novelData: workspaces.novelData,
             blocknoteData: workspaces.blocknoteData,
-            quillData: workspaces.quillData,
             inTrash: workspaces.inTrash,
             bannerUrl: workspaces.bannerUrl,
         })

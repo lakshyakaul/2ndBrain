@@ -4,6 +4,7 @@ import Link from 'next/link';
 import React from 'react';
 
 import { Lock, Link as LinkIcon, Users } from 'lucide-react';
+import { cn, sidebarNavItemClass } from '@/lib/utils';
 
 interface SelectedWorkspaceProps {
     workspace: Workspace;
@@ -24,9 +25,11 @@ const SelectedWorkspace: React.FC<SelectedWorkspaceProps> = ({
             onClick={() => {
                 if (onClick) onClick(workspace);
             }}
-            className={`flex items-center gap-2 px-2 py-1.5 text-sm rounded-md hover:bg-muted transition-colors w-full text-left cursor-pointer hover:no-underline ${
-                isActive ? 'text-foreground font-semibold bg-muted/50' : 'text-muted-foreground hover:text-foreground'
-            }`}
+            className={cn(
+                sidebarNavItemClass,
+                'w-full text-left cursor-pointer hover:no-underline',
+                isActive ? 'text-foreground font-semibold bg-muted/50' : ''
+            )}
         >
             {type === 'private' && <Lock size={14} className="shrink-0 opacity-70" />}
             {type === 'shared' && <LinkIcon size={14} className="shrink-0 opacity-70" />}

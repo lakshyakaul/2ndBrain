@@ -56,7 +56,7 @@ import ProfileIcon from '../icons/profileIcon';
 import LogoutButton from '@/components/app-navbar/profile/logout-button';
 import Link from 'next/link';
 import { useSubscriptionModal } from '@/lib/providers/subscription-modal-provider';
-import { postData } from '@/lib/utils';
+import { cn, settingsCardClass, postData } from '@/lib/utils';
 
 const WorkspaceSettingsForm = () => {
   const { user, subscription } = useSupabaseUser();
@@ -161,7 +161,7 @@ const WorkspaceSettingsForm = () => {
 
   return (
     <div className="flex flex-col gap-6 py-4">
-      <div className="rounded-xl border bg-card text-card-foreground shadow-sm overflow-hidden">
+      <div className={settingsCardClass}>
         <div className="p-6 pb-4">
           <h3 className="font-semibold leading-none tracking-tight text-lg flex items-center gap-2">
             <Briefcase size={20} /> Workspace Details
@@ -187,7 +187,7 @@ const WorkspaceSettingsForm = () => {
         </div>
       </div>
 
-      <div className="rounded-xl border bg-card text-card-foreground shadow-sm overflow-hidden">
+      <div className={settingsCardClass}>
         <div className="p-6 pb-4">
           <h3 className="font-semibold leading-none tracking-tight text-lg flex items-center gap-2">
             <Lock size={20} /> Access &amp; Security
@@ -272,7 +272,7 @@ const WorkspaceSettingsForm = () => {
                               {c.email?.substring(0, 2).toUpperCase()}
                             </AvatarFallback>
                           </Avatar>
-                          <div className="text-sm font-medium overflow-hidden overflow-ellipsis w-[140px] sm:w-[300px]">
+                          <div className="text-sm font-medium overflow-hidden w-[140px] sm:w-[300px]">
                             {c.email}
                           </div>
                         </div>

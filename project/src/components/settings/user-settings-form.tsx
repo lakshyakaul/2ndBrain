@@ -22,7 +22,7 @@ import ProfileIcon from '../icons/profileIcon';
 import LogoutButton from '@/components/app-navbar/profile/logout-button';
 import Link from 'next/link';
 import { useSubscriptionModal } from '@/lib/providers/subscription-modal-provider';
-import { postData } from '@/lib/utils';
+import { postData, settingsCardClass } from '@/lib/utils';
 
 // ─── Crop Dialog ────────────────────────────────────────────────────────────
 interface CropDialogProps {
@@ -325,7 +325,7 @@ const UserSettingsForm = () => {
 
       <div className="flex flex-col gap-6 py-4">
         {/* Profile Details Card */}
-        <div className="rounded-xl border bg-card text-card-foreground shadow-sm overflow-hidden">
+        <div className={settingsCardClass}>
           <div className="p-6 pb-4">
             <h3 className="font-semibold leading-none tracking-tight text-lg flex items-center gap-2">
               <UserIcon size={20} /> Profile Details
@@ -397,7 +397,7 @@ const UserSettingsForm = () => {
         </div>
 
         {/* Subscription Card */}
-        <div className="rounded-xl border bg-card text-card-foreground shadow-sm overflow-hidden">
+        <div className={settingsCardClass}>
           <div className="p-6 pb-4">
             <h3 className="font-semibold leading-none tracking-tight text-lg flex items-center gap-2">
               <CreditCard size={20} /> Subscription
@@ -431,7 +431,7 @@ const UserSettingsForm = () => {
         </div>
 
         {/* Danger Zone */}
-        <div className="rounded-xl border bg-card text-card-foreground shadow-sm overflow-hidden">
+        <div className={settingsCardClass}>
           <div className="p-6 pb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <h3 className="font-semibold leading-none tracking-tight text-lg text-destructive">Danger Zone</h3>

@@ -59,9 +59,7 @@ const DashboardSetup: React.FC<DashboardSetupProps> = ({
 
         try {
             const newWorkspace: Workspace = {
-                novelData: null,
                 blocknoteData: null,
-                quillData: null,
                 createdAt: new Date().toISOString(),
                 id: workspaceUUID,
                 inTrash: '',

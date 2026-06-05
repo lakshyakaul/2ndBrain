@@ -228,63 +228,16 @@ body {
   }
 }
 
-.animate-slide {
-  animation: 15s slide linear infinite;
-}
-
-@keyframes slide {
-  from {
-    transform: translateX(0);
-  }
-
-  to {
-    transform: translateX(-100%);
-  }
-}
-
-/* .ce-popover-item:hover {
-  @apply !bg-muted/40 !transition-all;
-}
-
-.ce-popover--opened {
-  @apply bg-card outline-none border-border dark:text-muted;
-}
-
-.ce-popover-item__icon {
-  @apply dark:!bg-background !text-white !font-medium !shadow-none dark:!border-[1px];
-}
-
-.ce-popover-item__title {
-  @apply dark:text-neutrals-7 font-normal;
-}
-
-.cdx-search-field {
-  @apply bg-background;
-}
-
-.ce-toolbar__content,
-.ce-block__content {
-  max-width: 750px;
-}
-
-.editorFocus {
-  @apply border-none outline-none;
-} */
 
 
 
 
-/* .dotPattern {
-  background-image: radial-gradient(rgb(25, 25, 25) 1px, transparent 1px);
-  background-size: 30px 30px;
-} */
 
 
 
 
-.ql-container {
-  @apply !border-none;
-}
+
+
 
 /* Hide scrollbar for Chrome, Safari and Opera */
 ::-webkit-scrollbar {
@@ -300,80 +253,12 @@ body {
 }
 
 
-/* Quill Bubble Toolbar Fixes */
-.ql-toolbar.ql-bubble {
-  @apply bg-background border-border rounded-md shadow-md p-1 flex flex-wrap gap-1 items-center;
-}
-
-.ql-toolbar.ql-bubble button {
-  @apply p-1 rounded hover:bg-muted transition-colors flex items-center justify-center;
-}
-
-.ql-toolbar.ql-bubble button svg {
-  @apply w-4 h-4;
-}
-
-.ql-toolbar.ql-bubble .ql-stroke {
-  @apply stroke-foreground;
-}
-
-.ql-toolbar.ql-bubble .ql-fill {
-  @apply fill-foreground;
-}
-
-.ql-toolbar.ql-bubble .ql-picker {
-  @apply text-foreground;
-}
-
-.ql-toolbar.ql-bubble .ql-picker-options {
-  @apply bg-background border border-border shadow-lg;
-}
-
-.ql-toolbar.ql-bubble .ql-tooltip {
-  @apply bg-background border border-border shadow-md rounded-md p-2;
-}
-
-/* Ensure quill editor itself has padding so text aligns with title and doesn't touch edges */
-.ql-editor {
-  @apply px-7 py-4;
-}
 
 
 
 
 
 
-/* BlockNote overrides
-.bn-container {
-  @apply p-1 rounded-lg;
-}
-
-.bn-container {
-  --bn-colors-editor-background: transparent !important;
-}
-
-
-/* cant see it despite bg colors
-.bn-editor {
-  @apply text-base antialiased;
-}
-
-.bn-block-group {
-  @apply dark:bg-neutral-800 rounded-lg;
-}
-
-/* .bn-block-outer {
-  @apply bg-gray-300 dark:bg-neutral-700/60 rounded-lg;
-} 
-
-.bn-block {
-  @apply rounded px-3 py-2;
-}
-
-.bn-block-content {
-  @apply rounded;
-}
-*/
 
 .bn-side-menu {
   @apply pr-15;

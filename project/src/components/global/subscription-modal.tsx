@@ -76,11 +76,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ products }) => {
           {products.length
             ? products.map((product) => (
                 <div
-                  className="
-                  flex
-                  justify-between
-                  items-center
-                  "
+                  className="flex justify-between items-center"
                   key={product.id}
                 >
                   {product.prices?.map((price) => (

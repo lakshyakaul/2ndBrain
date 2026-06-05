@@ -61,9 +61,7 @@ const PagesDropdownList: React.FC<PagesDropdownListProps> = ({
       return;
     }
     const newPage: Page = {
-      novelData: null,
       blocknoteData: null,
-      quillData: null,
       id: v4(),
       createdAt: new Date().toISOString(),
       title: 'Untitled',
@@ -92,39 +90,15 @@ const PagesDropdownList: React.FC<PagesDropdownListProps> = ({
 
   return (
     <>
-      <div
-        className="flex
-        sticky 
-        z-20 
-        top-0 
-        bg-background 
-        w-full  
-        h-10 
-        group/title 
-        justify-between 
-        items-center 
-        pr-4 
-        text-Neutrals/neutrals-8
-  "
-      >
-        <span
-          className="text-muted-foreground 
-        font-bold 
-        text-xs
-        uppercase
-        tracking-wider px-2"
-        >
+      <div className="flex sticky z-20 top-0 bg-background w-full h-10 group/title justify-between items-center pr-4 text-Neutrals/neutrals-8">
+        <span className="text-muted-foreground font-bold text-xs uppercase tracking-wider px-2">
           SUB-PAGES
         </span>
         <TooltipComponent message="Create Page">
           <PlusIcon
             onClick={addPageHandler}
             size={16}
-            className="group-hover/title:inline-block
-            hidden 
-            cursor-pointer
-            hover:dark:text-white
-          "
+            className="group-hover/title:inline-block hidden cursor-pointer hover:dark:text-white"
           />
         </TooltipComponent>
       </div>

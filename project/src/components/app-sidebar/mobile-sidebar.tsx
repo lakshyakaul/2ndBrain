@@ -26,30 +26,11 @@ const MobileSidebar: React.FC<MobileSidebarProps> = ({ children }) => {
     return (
         <>
             {selectedNav === 'sidebar' && <>{children}</>}
-            <nav
-                className="bg-black/10
-      backdrop-blur-lg
-      sm:hidden 
-      fixed 
-      z-50 
-      bottom-0 
-      right-0 
-      left-0
-      "
-            >
-                <ul
-                    className="flex 
-        justify-between 
-        items-center 
-        p-4"
-                >
+            <nav className="bg-black/10 backdrop-blur-lg sm:hidden fixed z-50 bottom-0 right-0 left-0">
+                <ul className="flex justify-between items-center p-4">
                     {nativeNavigations.map((item) => (
                         <li
-                            className="flex
-              items-center
-              flex-col
-              justify-center
-            "
+                            className="flex items-center flex-col justify-center"
                             key={item.id}
                             onClick={() => {
                                 setSelectedNav(item.id);

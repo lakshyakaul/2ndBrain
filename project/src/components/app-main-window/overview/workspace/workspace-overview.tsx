@@ -39,9 +39,7 @@ const WorkspaceOverview: React.FC<WorkspaceOverviewProps> = ({ workspace }) => {
     setCreatingPage(true);
     const newPageId = v4();
     const newPage = {
-      novelData: null,
       blocknoteData: null,
-      quillData: null,
       id: newPageId,
       createdAt: new Date().toISOString(),
       title: 'Untitled',

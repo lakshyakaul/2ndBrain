@@ -296,9 +296,7 @@ const BlockNoteEditorComp: React.FC<BlockNoteEditorProps> = ({
       return;
     }
     const newPage: Page = {
-      novelData: null,
       blocknoteData: null,
-      quillData: null,
       id: v4(),
       createdAt: new Date().toISOString(),
       title: 'Untitled',

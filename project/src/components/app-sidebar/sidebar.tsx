@@ -13,6 +13,7 @@ import { twMerge } from 'tailwind-merge';
 import WorkspaceDropdown from './sidebar-view/workspace-menu/workspace-dropdown';
 import { ScrollArea } from '../ui/scroll-area';
 import { Home, Trash2, Box, Bot } from 'lucide-react';
+import { cn, sidebarNavItemClass } from '@/lib/utils';
 import Link from 'next/link';
 import Trash from '../trash/trash';
 import PagesDropdownList from './sidebar-view/page-menu/pages-dropdown-list';
@@ -71,7 +72,7 @@ const Sidebar: React.FC<SidebarProps> = async ({ params, className }) => {
     return (
         <aside
             className={twMerge(
-                'flex flex-col w-[280px] shrink-0 !justify-between border-r border-border/50 bg-background/50 backdrop-blur-md h-full',
+                'flex flex-col w-[280px] shrink-0 justify-between border-r border-border/50 bg-background/50 backdrop-blur-md h-full',
                 className
             )}
         >
@@ -89,13 +90,13 @@ const Sidebar: React.FC<SidebarProps> = async ({ params, className }) => {
                         />
                         <Link
                             href={`/dashboard`}
-                            className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                            className={sidebarNavItemClass}
                         >
                             <Home size={16} />
                             <span>Home</span>
                         </Link>
                         <Trash>
-                            <div className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors w-full text-left cursor-pointer">
+                            <div className={cn(sidebarNavItemClass, "w-full text-left cursor-pointer")}>
                                 <Trash2 size={16} />
                                 <span>Trash</span>
                             </div>

@@ -6,6 +6,9 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export const sidebarNavItemClass = "flex items-center gap-2 px-2 py-1.5 text-sm rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors";
+export const settingsCardClass = "rounded-xl border bg-card text-card-foreground shadow-sm overflow-hidden";
+
 export const formatPrice = (price: Price) => {
   const priceString = new Intl.NumberFormat('en-US', {
     style: 'currency',
